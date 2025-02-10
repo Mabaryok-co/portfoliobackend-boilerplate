@@ -1,0 +1,4 @@
+src/database/handler/setup_first_user_done.tmp
+.env
+node_modules
+public/assets/upload_by_user

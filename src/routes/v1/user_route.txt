@@ -1,0 +1,133 @@
+const express = require("express");
+const bcrypt = require("bcrypt");
+const router = express.Router();
+const UserModel = require("../../models/user");
+const { redisClient } = require("../database/redis_connection");
+const { verifyToken, checkHeader } = require("../middleware/authMiddleware");
+const path = require("path");
+const { upload } = require("../middleware/multerUpload");
+const fs = require("fs");
+
+const privateRoute = express.Router();
+const publicRoute = express.Router();
+// Fungsi untuk menghapus semua file yang diunggah jika terjadi error
+const deleteUploadedFiles = async (files) => {
+  if (!files) return;
+  const deleteTasks = [];
+
+  if (files.image?.length) {
+    deleteTasks.push(
+      deleteFile(
+        `public/assets/upload_by_user/image/${files.image[0].filename}`
+      )
+    );
+  }
+  if (files.cv?.length) {
+    deleteTasks.push(
+      deleteFile(`public/assets/upload_by_user/cv/${files.cv[0].filename}`)
+    );
+  }
+
+  await Promise.all(deleteTasks);
+};
+
+const deleteFile = async (filePath) => {
+  if (!filePath) return;
+  const fullPath = path.join(__dirname, "../../", filePath);
+  fs.unlink(fullPath, (err) => {
+    if (err) console.error(`Gagal menghapus file: ${filePath}`, err);
+  });
+};
+
+router.get("/get/profile", verifyToken, async (req, res) => {
+  try {
+    res.status(200).send({
+      status: true,
+      message: "Berhasil Ambil User",
+      data: req.userSession,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).send({
+      status: false,
+      message: error.message,
+    });
+  }
+});
+
+router.put(
+  "/change/profile",
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "cv", maxCount: 1 },
+  ]),
+  verifyToken,
+  async (req, res) => {
+    try {
+      if (Object.keys(req.body).length === 0)
+        throw new Error("Body Tidak Boleh Kosong");
+      if (req.body.username || req.body.password) {
+        await deleteUploadedFiles(req.files);
+        throw new Error(
+          "Endpoint ini tidak bisa digunakan untuk mengubah username dan password"
+        );
+      }
+      const data = req.body;
+
+      if (req.files && Object.keys(req.files).length > 0) {
+        if (Array.isArray(req.files.image) && req.files.image.length > 0) {
+          data.image =
+            "public/assets/upload_by_user/image/" + req.files.image[0].filename;
+          await deleteFile(req.userSession.user.image);
+        }
+
+        if (Array.isArray(req.files.cv) && req.files.cv.length > 0) {
+          data.cv = {
+            url: "public/assets/upload_by_user/cv/" + req.files.cv[0].filename,
+          };
+          await deleteFile(req.userSession.user.cv.url);
+        }
+      }
+
+      if (data.social) {
+        data.social = JSON.parse(data.social);
+      }
+      const userUpdated = await UserModel.findOneAndUpdate(
+        { _id: req.userSession.user._id },
+        data,
+        {
+          new: true,
+        }
+      );
+
+      userObj = userUpdated.toObject();
+      delete userObj.password;
+      await redisClient.set(
+        `session:${req.userSession.user.username}`,
+        JSON.stringify({
+          user: userObj,
+          token: req.headers["authorization"].replace("Bearer ", ""),
+        })
+      );
+
+      res.status(200).send({
+        status: true,
+        message: "Profil Berhasil Diubah",
+        data: userObj,
+      });
+    } catch (error) {
+      res.status(400).send({
+        status: false,
+        message: error.message,
+      });
+    }
+  }
+);
+
+// router.put("/change/accountSettings", verifyToken, async (req, res) => {
+//   try {
+//     //TODO: Endpoint ubah username dan password
+//   } catch (error) {}
+// });
+
+module.exports = router;
