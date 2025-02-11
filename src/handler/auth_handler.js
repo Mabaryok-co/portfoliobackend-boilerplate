@@ -30,7 +30,7 @@ exports.login = async function (req, res) {
 
     const token = jwt.sign(
       {
-        user: user.username,
+        iid: user._id,
       },
       process.env.SECRET_JWT,
       {
@@ -42,7 +42,7 @@ exports.login = async function (req, res) {
     delete userObj.password;
 
     await redisClient.set(
-      `session:${user.username}`,
+      `session:${user._id}`,
       JSON.stringify({
         user: userObj,
         token: token,
@@ -68,7 +68,7 @@ exports.login = async function (req, res) {
 exports.logout = async function (req, res) {
   try {
     const user = req.userSession;
-    await redisClient.del(`session:${user.username}`);
+    await redisClient.del(`session:${user._id}`);
     res.status(200).send({
       status: true,
       message: "Berhasil Logout",

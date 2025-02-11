@@ -1,4 +1,5 @@
 src/database/handler/setup_first_user_done.tmp
 .env
+.vscode
 node_modules
 public/assets/upload_by_user

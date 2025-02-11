@@ -14,7 +14,7 @@ const verifyToken = async (req, res, next) => {
       token.replace("Bearer ", ""),
       process.env.SECRET_JWT
     );
-    const valid = await redisClient.get(`session:${decoded.user}`);
+    const valid = await redisClient.get(`session:${decoded.iid}`);
     if (!valid) throw new Error("Tidak Valid");
     const validParsed = JSON.parse(valid);
     if (validParsed.token != token.replace("Bearer ", "")) throw new Error();

@@ -5,7 +5,12 @@ dotenv.config();
 
 const connectDB = async () => {
   const DB_NAME = process.env.DB_NAME ?? "DB_Web_Portofolio";
-  await mongoose.disconnect();
+  // Cek apakah sudah terkoneksi
+  if (mongoose.connection.readyState === 1) {
+    console.log("⚡ MongoDB sudah terkoneksi");
+    return;
+  }
+
   await mongoose
     .connect(process.env.MONGO_URI, {
       dbName: DB_NAME,

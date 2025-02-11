@@ -1,5 +1,6 @@
 const multer = require("multer");
 const path = require("path");
+const { v4: uuidv4 } = require("uuid");
 
 const cv_path = path.join(__dirname, "../../public/assets/upload_by_user/cv");
 const image_profile_path = path.join(
@@ -20,8 +21,11 @@ const storage = multer.diskStorage({
     cb(
       null,
       Date.now() +
+        uuidv4() +
         `-${file.fieldname}-${
-          req.userSession ? req.userSession.user.name : "Unknown"
+          req.userSession
+            ? req.userSession.user.name.replace(/\s/g, "")
+            : "Unknown"
         }${path.extname(file.originalname)}`
     );
   },
