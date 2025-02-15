@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const setup_first_user = require("./handler/setup_first_user");
+const logger = require("../../library/logger/logger");
 dotenv.config();
 
 const connectDB = async () => {
@@ -16,13 +17,11 @@ const connectDB = async () => {
       dbName: DB_NAME,
     })
     .then(async () => {
-      console.log("✅ Mongo Connected");
+      logger.info("✅ Mongo Connected");
       await setup_first_user.createUser();
     })
     .catch((error) => {
-      console.log(process.env.MONGO_URI);
-      console.error("❌ MongoDB Connection Error : ", error);
-      process.exit(1);
+      throw new Error(error);
     });
 };
 

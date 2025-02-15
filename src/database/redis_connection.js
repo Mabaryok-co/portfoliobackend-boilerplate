@@ -1,3 +1,4 @@
+const logger = require("../../library/logger/logger");
 const Redis = require("ioredis");
 const redisClient = new Redis({
   host: process.env.REDIS_HOST,
@@ -5,9 +6,9 @@ const redisClient = new Redis({
 });
 
 const checkRedis = async () => {
-  await redisClient.on("connect", () => console.log("✅ Redis Connected"));
+  await redisClient.on("connect", () => logger.info("✅ Redis Connected"));
   await redisClient.on("error", (err) => {
-    console.error("❌ Redis Connection Error : ", err);
+    logger.error(`❌ Redis Connection Error : ${err}`);
     process.exit(1);
   });
 };
