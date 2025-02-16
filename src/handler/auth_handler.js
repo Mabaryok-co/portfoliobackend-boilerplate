@@ -2,6 +2,7 @@ const { redisClient } = require("../database/redis_connection");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../models/user");
+const config = require("../../config/config");
 
 exports.validator = function (req, res, next) {
   try {
@@ -32,9 +33,9 @@ exports.login = async function (req, res) {
       {
         iid: user._id,
       },
-      process.env.SECRET_JWT,
+      config.jwt.secret,
       {
-        expiresIn: "2h",
+        expiresIn: `${config.jwt.expiration}m`,
       }
     );
 

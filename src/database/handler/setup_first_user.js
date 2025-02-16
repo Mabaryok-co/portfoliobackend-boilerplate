@@ -4,7 +4,6 @@ const readline = require("readline");
 const fs = require("fs");
 const path = require("path");
 const logger = require("../../../library/logger/logger");
-require("dotenv").config();
 
 const CACHE_FILE = path.join(__dirname, "/setup_first_user_done.tmp"); // File untuk menyimpan status setup
 console.log("Cache File Path: ", CACHE_FILE);
@@ -37,7 +36,7 @@ exports.createUser = async function () {
       fs.writeFileSync(CACHE_FILE, "done");
       return;
     }
-    console.log(
+    logger.warn(
       "\n⚠️  Tidak ada user di database. Silakan buat user terlebih dahulu. \n"
     );
 

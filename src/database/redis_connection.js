@@ -1,8 +1,15 @@
 const logger = require("../../library/logger/logger");
+const config = require("../../config/config");
 const Redis = require("ioredis");
 const redisClient = new Redis({
-  host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT,
+  host: config.redis.host,
+  port: config.redis.port,
+  password: config.redis.password,
+  connectTimeout: config.redis.timeout,
+  retryStrategy: (times) => {
+    const delay = Math.min(times * config.redis.retryMultiplier, 15000);
+    return delay;
+  },
 });
 
 const checkRedis = async () => {

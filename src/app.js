@@ -1,15 +1,13 @@
 const express = require("express");
 const connectDB = require("./database/db_connection");
 const bparser = require("body-parser");
-const dotenv = require("dotenv");
+const config = require("../config/config");
 const helmet = require("helmet");
 const cors = require("cors");
 const compression = require("compression");
 const app = express();
 const { checkRedis } = require("./database/redis_connection");
 const logger = require("../library/logger/logger");
-
-dotenv.config();
 
 app.use(bparser.urlencoded({ extended: true }));
 app.use(bparser.json());
@@ -48,12 +46,10 @@ process.on("unhandledRejection", unexpectedErrorHandler);
 
 //Start Server
 async function startServer() {
-  process.server = app.listen(process.env.PORT, process.env.HOST, async () => {
+  process.server = app.listen(config.port, async () => {
     await checkRedis();
     await connectDB();
-    logger.info(
-      `Server Berjalan Pada http://${process.env.HOST}:${process.env.PORT}`
-    );
+    logger.info(`Server Berjalan Pada ${config.appUrl}:${config.port}`);
   });
 }
 

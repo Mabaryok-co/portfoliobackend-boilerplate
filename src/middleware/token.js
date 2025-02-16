@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { redisClient } = require("../database/redis_connection");
+const config = require("../../config/config");
 
 const verifyToken = async (req, res, next) => {
   const token = req.headers["authorization"];
@@ -10,10 +11,7 @@ const verifyToken = async (req, res, next) => {
       .send({ status: false, message: "No token, authorization denied" });
 
   try {
-    const decoded = jwt.verify(
-      token.replace("Bearer ", ""),
-      process.env.SECRET_JWT
-    );
+    const decoded = jwt.verify(token.replace("Bearer ", ""), config.jwt.secret);
     const valid = await redisClient.get(`session:${decoded.iid}`);
     if (!valid) throw new Error("Tidak Valid");
     const validParsed = JSON.parse(valid);

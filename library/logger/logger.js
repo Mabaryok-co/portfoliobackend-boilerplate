@@ -1,6 +1,7 @@
 const winston = require("winston");
 const dailyRotateFile = require("winston-daily-rotate-file");
 const path = require("path");
+const config = require("../../config/config");
 
 const logDir = path.join(__dirname, "../../logs");
 
@@ -27,8 +28,7 @@ const defaultLevel = [
 ];
 
 //Minimum log level. Default are info. so only priority greater than or equal than info
-//TODO: INITIALIZE CONFIG LOG LEVEL IN ENVIRONMENT
-const minLogLevel = "info";
+const minLogLevel = config.log.level;
 
 //Slicing index that is lower than minLogLevel index
 const logLevel = defaultLevel.slice(defaultLevel.indexOf(minLogLevel));
@@ -38,9 +38,9 @@ const createDailyTransportFile = (level) => {
     level: level,
     filename: `${level}-%DATE%.log`,
     dirname: logDir,
-    datePattern: datePattern("daily"),
-    maxSize: "5m",
-    maxFiles: "14d",
+    datePattern: datePattern(config.log.freq),
+    maxSize: `${config.log.maxSize}m`,
+    maxFiles: `${config.log.maxAge}d`,
   });
 };
 
