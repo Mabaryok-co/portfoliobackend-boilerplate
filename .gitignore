@@ -2,4 +2,9 @@ src/database/handler/setup_first_user_done.tmp
 .env
 .vscode
 node_modules
-logs/
+logs/*
+!logs/.gitkeep
+public/assets/default_by_app/*
+!public/assets/default_by_app/.gitkeep
+public/assets/upload_by_user/*
+!public/assets/upload_by_user/.gitkeep
