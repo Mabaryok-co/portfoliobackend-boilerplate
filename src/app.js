@@ -26,9 +26,7 @@ app.use(
         callback(null, true);
       }
 
-      logger.warn(`CORS ditolak untuk origin: ${origin}`);
-
-      callback(new Error("Akses CORS tidak diizinkan"));
+      callback(new Error("CORS_NOT_ALLOWED"));
     },
     credentials: true,
   })
@@ -40,6 +38,17 @@ app.options("*", cors());
  */
 const route = require("./routes/route");
 app.use("", route);
+
+// Error handler CORS
+app.use((err, req, res, next) => {
+  if (err.message === "CORS_NOT_ALLOWED") {
+    logger.warn(`CORS ditolak untuk origin: ${req.headers.origin}`);
+    return res
+      .status(403)
+      .send({ status: false, message: "Akses CORS tidak diizinkan" });
+  }
+  next();
+});
 
 //Handle if there is unknown route
 app.use((req, res) => {
