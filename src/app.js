@@ -13,7 +13,26 @@ app.use(helmet());
 
 //Gzip compression
 app.use(compression());
-app.use(cors());
+
+//CORS CONFIGURATION
+const allowedOrigins = config.cors.allowedOrigins.split(",");
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (config.env === "development") {
+        return callback(null, true); // Allow all in dev mode
+      }
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      }
+
+      logger.warn(`CORS ditolak untuk origin: ${origin}`);
+
+      callback(new Error("Akses CORS tidak diizinkan"));
+    },
+    credentials: true,
+  })
+);
 app.options("*", cors());
 
 /**
