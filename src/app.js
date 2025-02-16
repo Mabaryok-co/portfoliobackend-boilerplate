@@ -26,7 +26,7 @@ app.use(
         callback(null, true);
       }
 
-      callback(new Error("CORS_NOT_ALLOWED"));
+      callback(Object.assign(new Error("CORS NOT ALLOWED"), { status: 403 }));
     },
     credentials: true,
   })
@@ -39,15 +39,17 @@ app.options("*", cors());
 const route = require("./routes/route");
 app.use("", route);
 
-// Error handler CORS
+// Global Error handler for Route (Including CORS)
 app.use((err, req, res, next) => {
-  if (err.message === "CORS_NOT_ALLOWED") {
+  if (err.message === "CORS NOT ALLOWED") {
     logger.warn(`CORS ditolak untuk origin: ${req.headers.origin}`);
-    return res
-      .status(403)
-      .send({ status: false, message: "Akses CORS tidak diizinkan" });
+  } else {
+    logger.error(`Error: ${err.message}`);
   }
-  next();
+  return res.status(err.status || 500).json({
+    status: false,
+    message: err.message || "Internal Server Error",
+  });
 });
 
 //Handle if there is unknown route
