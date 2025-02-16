@@ -3,6 +3,8 @@ const UserModel = require("../models/user");
 const bcrypt = require("bcrypt");
 const { redisClient } = require("../database/redis_connection");
 
+const hasSpaces = (value) => /\s/.test(value);
+
 exports.getProfile = async function (req, res) {
   try {
     res.status(200).send({
@@ -129,9 +131,14 @@ exports.updateAccount = async function (req, res) {
       throw new Error("Body Tidak Boleh Kosong");
 
     const data = req.body;
+
+    if (hasSpaces(data.password) || hasSpaces(data.username))
+      throw new Error("Username atau password tidak boleh memiliki spasi");
+
     if (data.password) {
       data.password = await bcrypt.hash(data.password, 10);
     }
+
     const user = await UserModel.findOneAndUpdate(
       { _id: req.userSession.user._id },
       data,
@@ -142,7 +149,6 @@ exports.updateAccount = async function (req, res) {
         "User Tidak Ditemukan. Pastikan Token Valid atau User memang telah dihapus"
       );
 
-    await user.save();
     userObj = user.toObject();
     delete userObj.password;
     await redisClient.del(`session:${req.userSession.user._id}`);

@@ -6,7 +6,8 @@ const path = require("path");
 const logger = require("../../../library/logger/logger");
 
 const CACHE_FILE = path.join(__dirname, "/setup_first_user_done.tmp"); // File untuk menyimpan status setup
-console.log("Cache File Path: ", CACHE_FILE);
+
+const hasSpaces = (value) => /\s/.test(value);
 
 async function input(query) {
   const rl = readline.createInterface({
@@ -42,6 +43,10 @@ exports.createUser = async function () {
 
     const username = await input("Masukkan username: ");
     const password = await input("Masukkan password: ");
+
+    if (hasSpaces(username) || hasSpaces(password))
+      throw new Error("Username atau password tidak boleh memiliki spasi");
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await UserModel.create({
@@ -52,6 +57,7 @@ exports.createUser = async function () {
     logger.info(
       "\n✅ User berhasil dibuat! Silahkan login menggunakan akun ini. Mohon lengkapi data diri anda di profile setelah login"
     );
+    logger.warn("⚠️ Mohon lengkapi data diri anda di profile setelah login");
     fs.writeFileSync(CACHE_FILE, "done");
     return;
   } catch (error) {
