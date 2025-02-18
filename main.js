@@ -1,14 +1,15 @@
+require("module-alias/register");
 const app = require("./src/app");
-const config = require("./config/config");
-const logger = require("./library/logger/logger");
+const config = require("@config");
+const logger = require("@logger/logger");
 const { checkRedis } = require("./src/database/redis_connection");
 const connectDB = require("./src/database/db_connection");
 
 //Server Handler
 
 const exitHandler = () => {
-  if (server) {
-    server.close(() => {
+  if (process.server) {
+    process.server.close(() => {
       logger.info("Server closed");
       process.exit(1);
     });

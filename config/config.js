@@ -19,7 +19,8 @@ const ENV_SCHEMA = Joi.object({
   REDIS_CONNECTION_TIMEOUT_IN_MS: Joi.number().default(5000),
   REDIS_RETRY_STRATEGY_MULTIPLIER_IN_MS: Joi.string().default(1000),
 
-  ALLOWED_ORIGINS: Joi.string().required(),
+  FRONTEND_URL: Joi.string().uri().optional().allow(""),
+  EXTRA_ORIGINS_: Joi.string().uri().optional().allow(""),
 
   MONGO_URI: Joi.string().required(),
   DB_NAME: Joi.string().required(),
@@ -72,7 +73,8 @@ const config = {
     },
   },
   cors: {
-    allowedOrigins: env.ALLOWED_ORIGINS,
+    frontend: env.FRONTEND_URL,
+    extraOrigins: env.EXTRA_ORIGINS,
   },
 };
 

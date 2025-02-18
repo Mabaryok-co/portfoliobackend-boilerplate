@@ -1,5 +1,5 @@
-const logger = require("../../library/logger/logger");
-const config = require("../../config/config");
+const logger = require("@logger/logger");
+const config = require("@config");
 const Redis = require("ioredis");
 const redisClient = new Redis({
   host: config.redis.host,

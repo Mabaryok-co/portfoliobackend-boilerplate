@@ -1,8 +1,8 @@
 const { redisClient } = require("../database/redis_connection");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const UserModel = require("../models/user");
-const config = require("../../config/config");
+const UserModel = require("@models/user");
+const config = require("@config");
 const { RouteError } = require("./errorHandlers");
 
 exports.validator = function (req, res, next) {

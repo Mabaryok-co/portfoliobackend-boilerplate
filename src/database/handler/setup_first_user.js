@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const readline = require("readline");
 const fs = require("fs");
 const path = require("path");
-const logger = require("../../../library/logger/logger");
+const logger = require("@logger/logger");
 
 const CACHE_FILE = path.join(__dirname, "/setup_first_user_done.tmp"); // File untuk menyimpan status setup
 
@@ -26,19 +26,19 @@ exports.createUser = async function () {
   try {
     if (fs.existsSync(CACHE_FILE)) {
       logger.info(
-        "✅ Setup user sudah dilakukan sebelumnya. Melewatkan proses setup...\n"
+        "✅ Setup user sudah dilakukan sebelumnya. Melewatkan proses setup..."
       );
       return;
     }
 
     const userCount = await UserModel.countDocuments();
     if (userCount > 0) {
-      logger.log("✅ User Telah Ada. Melanjutkan Server\n");
+      logger.log("✅ User Telah Ada. Melanjutkan Server");
       fs.writeFileSync(CACHE_FILE, "done");
       return;
     }
     logger.warn(
-      "\n⚠️  Tidak ada user di database. Silakan buat user terlebih dahulu. \n"
+      "\n⚠️  Tidak ada user di database. Silakan buat user terlebih dahulu."
     );
 
     const username = await input("Masukkan username: ");
@@ -55,7 +55,7 @@ exports.createUser = async function () {
     });
 
     logger.info(
-      "\n✅ User berhasil dibuat! Silahkan login menggunakan akun ini. Mohon lengkapi data diri anda di profile setelah login"
+      "✅ User berhasil dibuat! Silahkan login menggunakan akun ini. Mohon lengkapi data diri anda di profile setelah login"
     );
     logger.warn("⚠️ Mohon lengkapi data diri anda di profile setelah login");
     fs.writeFileSync(CACHE_FILE, "done");

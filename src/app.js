@@ -1,11 +1,11 @@
 const express = require("express");
 const bparser = require("body-parser");
-const config = require("../config/config");
+const config = require("@config");
 const helmet = require("helmet");
 const cors = require("cors");
 const compression = require("compression");
 const app = express();
-const logger = require("../library/logger/logger");
+const logger = require("@logger/logger");
 
 app.use(bparser.urlencoded({ extended: true }));
 app.use(bparser.json());
@@ -15,7 +15,13 @@ app.use(helmet());
 app.use(compression());
 
 //CORS CONFIGURATION
-const allowedOrigins = config.cors.allowedOrigins.split(",");
+// Construct the main allowed origin
+const mainOrigin = `${config.appUrl}:${config.port}`;
+const allowedOrigins = [
+  mainOrigin,
+  config.cors.extraOrigins,
+  config.cors.frontend,
+];
 app.use(
   cors({
     origin: function (origin, callback) {

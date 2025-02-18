@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const config = require("../../config/config");
+const config = require("@config");
 const setup_first_user = require("./handler/setup_first_user");
-const logger = require("../../library/logger/logger");
+const logger = require("@logger/logger");
 
 const connectDB = async () => {
   const DB_NAME = config.database.mongo.dbName ?? "DB_Web_Portofolio";
