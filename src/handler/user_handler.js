@@ -3,6 +3,9 @@ const UserModel = require("../models/user");
 const bcrypt = require("bcrypt");
 const { redisClient } = require("../database/redis_connection");
 const { RouteError } = require("./errorHandlers");
+const { noSpace } = require("@validator/space");
+const JoiValidator = require("@validator/JoiValidator");
+const { userPassSchema } = require("@validator/schema/authSchema");
 
 const hasSpaces = (value) => /\s/.test(value);
 
@@ -105,43 +108,37 @@ exports.downloadCV = async function (req, res) {
 };
 
 exports.updateAccount = async function (req, res) {
-  try {
-    //TODO: Endpoint ubah username dan password
-    if (Object.keys(req.body).length === 0)
-      throw RouteError("Body Tidak Boleh Kosong");
+  //TODO: Endpoint ubah username dan password
+  if (Object.keys(req.body).length === 0)
+    throw RouteError("Body Tidak Boleh Kosong");
 
-    const data = req.body;
+  const data = {
+    username: noSpace(req.body.username),
+    password: noSpace(req.body.password),
+  };
 
-    if (hasSpaces(data.password) || hasSpaces(data.username))
-      throw RouteError("Username atau password tidak boleh memiliki spasi");
+  JoiValidator(userPassSchema, data);
 
-    if (data.password) {
-      data.password = await bcrypt.hash(data.password, 10);
-    }
-
-    const user = await UserModel.findOneAndUpdate(
-      { _id: req.userSession.user._id },
-      data,
-      { new: true }
-    );
-    if (!user)
-      throw RouteError(
-        "User Tidak Ditemukan. Pastikan Token Valid atau User memang telah dihapus"
-      );
-
-    userObj = user.toObject();
-    delete userObj.password;
-    await redisClient.del(`session:${req.userSession.user._id}`);
-    res.status(200).send({
-      status: true,
-      message: "Profile Berhasil di Update Silahkan Login Kembali",
-      data: userObj,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(400).send({
-      status: false,
-      message: error.message,
-    });
+  if (data.password) {
+    data.password = await bcrypt.hash(data.password, 10);
   }
+
+  const user = await UserModel.findOneAndUpdate(
+    { _id: req.userSession.user._id },
+    data,
+    { new: true }
+  );
+  if (!user)
+    throw RouteError(
+      "User Tidak Ditemukan. Pastikan Token Valid atau User memang telah dihapus"
+    );
+
+  userObj = user.toObject();
+  delete userObj.password;
+  await redisClient.del(`session:${req.userSession.user._id}`);
+  res.status(200).send({
+    status: true,
+    message: "Profile Berhasil di Update Silahkan Login Kembali",
+    data: userObj,
+  });
 };

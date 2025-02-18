@@ -6,7 +6,7 @@ const path = require("path");
 const logger = require("@logger/logger");
 const { noSpace } = require("@validator/space");
 const JoiValidator = require("@validator/JoiValidator");
-const { userPassSchema } = require("@validator/authSchema");
+const { userPassSchema } = require("@validator/schema/authSchema");
 
 const CACHE_FILE = path.join(__dirname, "/setup_first_user_done.tmp"); // File untuk menyimpan status setup
 
@@ -53,10 +53,9 @@ exports.createUser = async function () {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await UserModel.create({
-      username,
-      password: hashedPassword,
-    });
+    data.password = hashedPassword;
+
+    await UserModel.create(data);
 
     logger.info(
       "✅ User berhasil dibuat! Silahkan login menggunakan akun ini. Mohon lengkapi data diri anda di profile setelah login"
