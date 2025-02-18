@@ -12,7 +12,9 @@
   "_moduleAliases": {
     "@logger": "library/logger",
     "@config": "config/config",
-    "@models": "src/models"
+    "@models": "src/models",
+    "@validator": "src/middleware/validator",
+    "@handler": "src/handler"
   },
   "devDependencies": {
     "express": "^4.21.2",

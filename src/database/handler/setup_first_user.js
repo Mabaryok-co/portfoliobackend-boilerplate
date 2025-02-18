@@ -4,10 +4,11 @@ const readline = require("readline");
 const fs = require("fs");
 const path = require("path");
 const logger = require("@logger/logger");
+const { noSpace } = require("@validator/space");
+const JoiValidator = require("@validator/JoiValidator");
+const { userPassSchema } = require("@validator/authSchema");
 
 const CACHE_FILE = path.join(__dirname, "/setup_first_user_done.tmp"); // File untuk menyimpan status setup
-
-const hasSpaces = (value) => /\s/.test(value);
 
 async function input(query) {
   const rl = readline.createInterface({
@@ -17,7 +18,7 @@ async function input(query) {
   return new Promise((resolve) => {
     rl.question(query, (answer) => {
       rl.close();
-      resolve(answer.replace(/\s/g, ""));
+      resolve(answer);
     });
   });
 }
@@ -41,11 +42,14 @@ exports.createUser = async function () {
       "\n⚠️  Tidak ada user di database. Silakan buat user terlebih dahulu."
     );
 
-    const username = await input("Masukkan username: ");
-    const password = await input("Masukkan password: ");
+    const username = noSpace(await input("Masukkan username: "));
+    const password = noSpace(await input("Masukkan password: "));
+    const data = {
+      username: username,
+      password: password,
+    };
 
-    if (hasSpaces(username) || hasSpaces(password))
-      throw new Error("Username atau password tidak boleh memiliki spasi");
+    JoiValidator(userPassSchema, data);
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
