@@ -1,4 +1,4 @@
-const UserModel = require("../../models/user");
+const UserModel = require("@models/user");
 const bcrypt = require("bcrypt");
 const readline = require("readline");
 const fs = require("fs");
@@ -6,7 +6,7 @@ const path = require("path");
 const logger = require("@logger/logger");
 const { noSpace } = require("@validator/space");
 const JoiValidator = require("@validator/JoiValidator");
-const { userPassSchema } = require("@validator/schema/authSchema");
+const { userSchema } = require("@validator/schema/userSchema");
 
 const CACHE_FILE = path.join(__dirname, "/setup_first_user_done.tmp"); // File untuk menyimpan status setup
 
@@ -49,7 +49,7 @@ exports.createUser = async function () {
       password: password,
     };
 
-    JoiValidator(userPassSchema, data);
+    JoiValidator(userSchema, data, { pick: ["username", "password"] });
 
     const hashedPassword = await bcrypt.hash(password, 10);
 

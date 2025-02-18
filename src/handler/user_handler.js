@@ -1,11 +1,11 @@
 const fileHandler = require("./file_handler");
-const UserModel = require("../models/user");
+const UserModel = require("@models/user");
 const bcrypt = require("bcrypt");
-const { redisClient } = require("../database/redis_connection");
+const { redisClient } = require("@database/redis_connection");
 const { RouteError } = require("./errorHandlers");
 const { noSpace } = require("@validator/space");
 const JoiValidator = require("@validator/JoiValidator");
-const { userPassSchema } = require("@validator/schema/authSchema");
+const { userSchema } = require("@validator/schema/userSchema");
 
 const hasSpaces = (value) => /\s/.test(value);
 
@@ -117,7 +117,7 @@ exports.updateAccount = async function (req, res) {
     password: noSpace(req.body.password),
   };
 
-  JoiValidator(userPassSchema, data);
+  JoiValidator(userSchema, data, { pick: ["username", "password"] });
 
   if (data.password) {
     data.password = await bcrypt.hash(data.password, 10);

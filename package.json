@@ -14,6 +14,7 @@
     "@config": "config/config",
     "@models": "src/models",
     "@validator": "src/middleware/validator",
+    "@database" : "src/database",
     "@handler": "src/handler"
   },
   "devDependencies": {
