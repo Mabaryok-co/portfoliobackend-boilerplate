@@ -7,6 +7,9 @@ const { RouteError } = require("./errorHandlers");
 const { noSpace } = require("@validator/space");
 const JoiValidator = require("@validator/JoiValidator");
 const { userSchema } = require("@validator/schema/userSchema");
+const reqIp = require("request-ip");
+const { lookup } = require("ip-location-api");
+const logger = require("@logger/logger");
 
 // exports.validator = function (req, res, next) {
 //   try {
@@ -63,6 +66,14 @@ exports.login = async function (req, res) {
     }),
     "EX",
     7200
+  );
+  const ipUser = reqIp.getClientIp(req);
+  const ipLoc = await lookup(ipUser);
+
+  logger.info(
+    `User ${user.username} melakukan login dengan ip ${ipUser} di ${
+      ipLoc.country ?? "Unknown"
+    } \n Menggunakan ${req.headers["user-agent"] ?? "Not detected"}`
   );
 
   res.status(200).send({
