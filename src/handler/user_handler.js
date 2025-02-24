@@ -3,11 +3,8 @@ const UserModel = require("@models/user");
 const bcrypt = require("bcrypt");
 const { redisClient } = require("@database/redis_connection");
 const { RouteError } = require("./errorHandlers");
-const { noSpace } = require("@validator/space");
 const JoiValidator = require("@validator/JoiValidator");
 const { userSchema } = require("@validator/schema/userSchema");
-
-const hasSpaces = (value) => /\s/.test(value);
 
 exports.getProfile = async function (req, res) {
   if (!req.userSession) throw RouteError("User Tidak Ditemukan");
@@ -36,15 +33,17 @@ exports.getProfilePublic = async function (req, res) {
 };
 
 exports.updateProfile = async function (req, res) {
-  if (Object.keys(req.body).length === 0)
-    throw RouteError("Body Tidak Boleh Kosong");
   if (req.body.username || req.body.password) {
+    //Jika ada kesalahan, maka hapus file yang sudah di upload multer
     await fileHandler.deleteUploadedFiles(req.files);
     throw RouteError(
       "Endpoint ini tidak bisa digunakan untuk mengubah username dan password"
     );
   }
-  const data = req.body;
+
+  const fieldsToUpdate = Object.keys(req.body);
+  // Validate only the fields that are being updated
+  const data = JoiValidator(userSchema, req.body, { pick: fieldsToUpdate });
 
   //Jika user mengupdate Image atau CV. Maka hapus file yang sudah ada sebelumnya
   if (req.files && Object.keys(req.files).length > 0) {
@@ -72,6 +71,8 @@ exports.updateProfile = async function (req, res) {
       new: true,
     }
   );
+
+  if (!userUpdated) throw RouteError("User Tidak Ditemukan. Gagal Update");
 
   userObj = userUpdated.toObject();
   delete userObj.password;
@@ -108,16 +109,8 @@ exports.downloadCV = async function (req, res) {
 };
 
 exports.updateAccount = async function (req, res) {
-  //TODO: Endpoint ubah username dan password
-  if (Object.keys(req.body).length === 0)
-    throw RouteError("Body Tidak Boleh Kosong");
-
-  const data = {
-    username: noSpace(req.body.username),
-    password: noSpace(req.body.password),
-  };
-
-  JoiValidator(userSchema, data, { pick: ["username", "password"] });
+  const pickAttr = Object.keys(req.body);
+  const data = JoiValidator(userSchema, req.body, { pick: pickAttr });
 
   if (data.password) {
     data.password = await bcrypt.hash(data.password, 10);

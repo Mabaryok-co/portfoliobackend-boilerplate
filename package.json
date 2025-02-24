@@ -15,7 +15,8 @@
     "@models": "src/models",
     "@validator": "src/middleware/validator",
     "@database" : "src/database",
-    "@handler": "src/handler"
+    "@handler": "src/handler",
+    "@logsDir" : "logs"
   },
   "devDependencies": {
     "express": "^4.21.2",

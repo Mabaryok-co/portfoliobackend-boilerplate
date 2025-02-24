@@ -23,6 +23,24 @@ async function input(query) {
   });
 }
 
+async function getUserCredential() {
+  while (true) {
+    try {
+      const username = noSpace(await input("Masukkan username: "));
+      const password = noSpace(await input("Masukkan password: "));
+      const data = {
+        username: username,
+        password: password,
+      };
+
+      JoiValidator(userSchema, data, { pick: ["username", "password"] });
+      return data;
+    } catch (error) {
+      logger.warn(`Failed To Create User: ${error.message}`);
+    }
+  }
+}
+
 exports.createUser = async function () {
   try {
     if (fs.existsSync(CACHE_FILE)) {
@@ -42,20 +60,13 @@ exports.createUser = async function () {
       "\n⚠️  Tidak ada user di database. Silakan buat user terlebih dahulu."
     );
 
-    const username = noSpace(await input("Masukkan username: "));
-    const password = noSpace(await input("Masukkan password: "));
-    const data = {
-      username: username,
-      password: password,
-    };
+    const userData = await getUserCredential();
 
-    JoiValidator(userSchema, data, { pick: ["username", "password"] });
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    userData.password = hashedPassword;
 
-    data.password = hashedPassword;
-
-    await UserModel.create(data);
+    await UserModel.create(userDatal);
 
     logger.info(
       "✅ User berhasil dibuat! Silahkan login menggunakan akun ini. Mohon lengkapi data diri anda di profile setelah login"

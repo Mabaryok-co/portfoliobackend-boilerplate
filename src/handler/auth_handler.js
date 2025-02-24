@@ -4,33 +4,41 @@ const jwt = require("jsonwebtoken");
 const UserModel = require("@models/user");
 const config = require("@config");
 const { RouteError } = require("./errorHandlers");
+const { noSpace } = require("@validator/space");
+const JoiValidator = require("@validator/JoiValidator");
+const { userSchema } = require("@validator/schema/userSchema");
 
-exports.validator = function (req, res, next) {
-  try {
-    if (Object.keys(req.body).length === 0)
-      throw RouteError("Body Tidak Ditemukan");
-    if (!req.body.username || !req.body.password)
-      throw RouteError("Field Username/Password tidak ditemukan dalam body");
-    req.body.username = req.body.username.replace(/\s/g, "");
-    next();
-  } catch (error) {
-    res.status(400).send({
-      status: false,
-      message: error.message,
-    });
-  }
-};
+// exports.validator = function (req, res, next) {
+//   try {
+//     if (Object.keys(req.body).length === 0)
+//       throw RouteError("Body Tidak Ditemukan");
+//     if (!req.body.username || !req.body.password)
+//       throw RouteError("Field Username/Password tidak ditemukan dalam body");
+//     req.body.username = req.body.username.replace(/\s/g, "");
+//     next();
+//   } catch (error) {
+//     res.status(400).send({
+//       status: false,
+//       message: error.message,
+//     });
+//   }
+// };
 
 exports.login = async function (req, res) {
-  const { username, password } = req.body;
+  const data = {
+    username: noSpace(req.body.username),
+    password: noSpace(req.body.password),
+  };
 
-  const user = await UserModel.findOne({ username: username });
+  JoiValidator(userSchema, data, { pick: ["username", "password"] });
+
+  const user = await UserModel.findOne({ username: data.username });
   const authError = RouteError("Username atau Password salah!");
 
   if (!user) {
     throw authError;
   }
-  if (!(await bcrypt.compare(password, user.password))) {
+  if (!(await bcrypt.compare(data.password, user.password))) {
     throw authError;
   }
 

@@ -31,8 +31,18 @@ const JoiValidator = (schema, value, options = {}) => {
 
   console.log(modifiedSchema.keys);
 
-  const { value: valid, error } = modifiedSchema.validate(value);
-  if (error) throw RouteError(`Schema Validation error: ${error.message}`);
+  const { value: valid, error } = modifiedSchema.validate(value, {
+    // Allow unknown keys to be stripped during validation
+    stripUnknown: true,
+    // Validate all fields, don't stop at first error
+    abortEarly: false,
+  });
+  if (error) {
+    const errorMessages = error.details
+      .map((detail) => detail.message)
+      .join(", ");
+    throw RouteError(`Input Validation error: ${errorMessages}`);
+  }
 
   return valid;
 };

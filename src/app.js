@@ -15,7 +15,6 @@ app.use(helmet());
 app.use(compression());
 
 //CORS CONFIGURATION
-// Construct the main allowed origin
 const mainOrigin = `${config.appUrl}:${config.port}`;
 const allowedOrigins = [
   mainOrigin,
@@ -39,19 +38,24 @@ app.use(
 );
 app.options("*", cors());
 
-/**
- * @route Entry Point Semua Route
- */
+//Entry Point Semua Route
 const route = require("./routes/route");
 app.use("", route);
 
-// Global Error handler for Route (Including CORS)
+//Global Error handler for Route (Including CORS)
+//Secara default error dari route akan berisi status 400 atau ditetapkan user.
+//Jika tidak ditetapkan maka akan menggunakan error 500, yang artinya ada kesalahan sistem
 app.use((err, req, res, next) => {
   if (err.message === "CORS NOT ALLOWED") {
     logger.warn(`CORS ditolak untuk origin: ${req.headers.origin}`);
-  } else {
-    logger.error(`Error: ${err.message}`);
   }
+
+  if (!err.status) {
+    logger.error(err);
+  } else {
+    logger.warn(`Warn Error: ${err.message}`);
+  }
+
   return res.status(err.status || 500).json({
     status: false,
     message: err.message || "Internal Server Error",

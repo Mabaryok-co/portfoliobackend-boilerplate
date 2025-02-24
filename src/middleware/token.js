@@ -3,8 +3,7 @@ const { redisClient } = require("../database/redis_connection");
 const config = require("@config");
 
 const verifyToken = async (req, res, next) => {
-  const token = req.headers["authorization"];
-
+  const token = req.headers.authorization;
   if (!token)
     return res
       .status(401)
