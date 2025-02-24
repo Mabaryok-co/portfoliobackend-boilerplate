@@ -19,7 +19,7 @@ const exitHandler = () => {
 };
 
 const unexpectedErrorHandler = (error) => {
-  logger.error(`Unexpected Error: ${error}`);
+  logger.error(error);
   exitHandler();
 };
 
@@ -28,9 +28,9 @@ process.on("unhandledRejection", unexpectedErrorHandler);
 
 //Start Server
 async function startServer() {
+  await checkRedis();
+  await connectDB();
   process.server = app.listen(config.port, async () => {
-    await checkRedis();
-    await connectDB();
     logger.info(`Server Berjalan Pada ${config.appUrl}:${config.port}`);
   });
 }

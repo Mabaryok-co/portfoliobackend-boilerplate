@@ -3,6 +3,8 @@ const config = require("@config");
 const setup_first_user = require("./handler/setup_first_user");
 const logger = require("@logger/logger");
 
+let isTryConnect = true;
+
 const connectDB = async () => {
   const DB_NAME = config.database.mongo.dbName ?? "DB_Web_Portofolio";
   // Cek apakah sudah terkoneksi
@@ -11,17 +13,34 @@ const connectDB = async () => {
     return;
   }
 
-  await mongoose
-    .connect(config.database.mongo.uri, {
-      dbName: DB_NAME,
-    })
-    .then(async () => {
+  if (isTryConnect) {
+    try {
+      await mongoose.connect(config.database.mongo.uri, {
+        serverSelectionTimeoutMS: config.database.mongo.retry,
+        dbName: DB_NAME,
+      });
       logger.info("✅ Mongo Connected");
+      isTryConnect = false;
       await setup_first_user.createUser();
-    })
-    .catch((error) => {
-      throw new Error(error);
-    });
+      return;
+    } catch (error) {
+      logger.error(error);
+      logger.warn(
+        `🔄 Retrying database in ${
+          config.database.mongo.retry / 1000
+        } seconds...`
+      );
+      await new Promise((resolve) =>
+        setTimeout(resolve, config.database.mongo.retry)
+      );
+    }
+  }
 };
+
+mongoose.connection.on("disconnected", () => {
+  logger.warn("⚠️ MongoDB Disconnected! Trying to reconnect...");
+  isTryConnect = true;
+  connectDB();
+});
 
 module.exports = connectDB;

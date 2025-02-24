@@ -24,6 +24,7 @@ const ENV_SCHEMA = Joi.object({
 
   MONGO_URI: Joi.string().required(),
   DB_NAME: Joi.string().required(),
+  MONGO_RETRY_IN_MS: joi.number().optional().default(5000),
 
   JWT_SECRET: Joi.string().required(),
   JWT_EXPIRATION_MINUTES: Joi.number().required(),
@@ -70,6 +71,7 @@ const config = {
     mongo: {
       uri: env.MONGO_URI,
       dbName: env.DB_NAME,
+      retry: env.MONGO_RETRY_IN_MS,
     },
   },
   cors: {

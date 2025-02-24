@@ -72,7 +72,7 @@ exports.login = async function (req, res) {
 
   logger.info(
     `User ${user.username} melakukan login dengan ip ${ipUser} di ${
-      ipLoc.country ?? "Unknown"
+      ipLoc ? ipLoc.country : "Unknown"
     } \n Menggunakan ${req.headers["user-agent"] ?? "Not detected"}`
   );
 
