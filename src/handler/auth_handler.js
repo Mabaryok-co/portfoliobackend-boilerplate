@@ -11,22 +11,6 @@ const reqIp = require("request-ip");
 const { lookup } = require("ip-location-api");
 const logger = require("@logger/logger");
 
-// exports.validator = function (req, res, next) {
-//   try {
-//     if (Object.keys(req.body).length === 0)
-//       throw RouteError("Body Tidak Ditemukan");
-//     if (!req.body.username || !req.body.password)
-//       throw RouteError("Field Username/Password tidak ditemukan dalam body");
-//     req.body.username = req.body.username.replace(/\s/g, "");
-//     next();
-//   } catch (error) {
-//     res.status(400).send({
-//       status: false,
-//       message: error.message,
-//     });
-//   }
-// };
-
 exports.login = async function (req, res) {
   const data = {
     username: noSpace(req.body.username),
@@ -84,7 +68,7 @@ exports.login = async function (req, res) {
 };
 
 exports.logout = async function (req, res) {
-  const user = req.userSession;
+  const user = req.userSession.user;
   if (!user) {
     throw RouteError("Anda tidak sedang login");
   }
