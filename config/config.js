@@ -28,6 +28,9 @@ const ENV_SCHEMA = Joi.object({
   JWT_SECRET: Joi.string().required(),
   JWT_EXPIRATION_MINUTES: Joi.number().required(),
 
+  AI_API_KEY: Joi.string().required(),
+  AI_BASE_URL: Joi.string().uri().required(),
+
   LOG_DIR: Joi.string().optional().allow(""),
   LOG_LEVEL: Joi.string()
     .valid("debug", "info", "verbose", "http", "warn", "error")
@@ -58,6 +61,10 @@ const config = {
   jwt: {
     secret: env.JWT_SECRET,
     expiration: env.JWT_EXPIRATION_MINUTES,
+  },
+  ai: {
+    apiKey: env.AI_API_KEY,
+    baseUrl: env.AI_BASE_URL,
   },
   redis: {
     host: env.REDIS_HOST,

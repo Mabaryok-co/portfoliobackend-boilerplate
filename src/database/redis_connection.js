@@ -10,7 +10,6 @@ const redisClient = new Redis({
   host: config.redis.host,
   port: config.redis.port,
   password: config.redis.password,
-  connectTimeout: config.redis.timeout,
   retryStrategy: (times) => {
     delay = Math.min(times * config.redis.retryMultiplier, 10000);
     logger.warn(`🔄 Redis Retry in ${delay / 1000} seconds...`);

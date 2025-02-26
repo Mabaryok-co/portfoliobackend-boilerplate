@@ -1,7 +1,7 @@
 const express = require("express");
-const { verifyToken } = require("../../middleware/token");
-const authHandler = require("../../handler/auth_handler");
-const { errorHandlers } = require("../../handler/errorHandlers");
+const { verifyToken } = require("@middleware/token");
+const authHandler = require("@handler/auth_handler");
+const { errorHandlers } = require("@handler/errorHandlers");
 const { bodyNotEmpty } = require("@validator/body");
 
 const router = express.Router();
