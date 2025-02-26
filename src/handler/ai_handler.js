@@ -52,7 +52,7 @@ const systemTemplate = {
 **/
 
 //Base AIcompletionSSE
-//TODO: Use structured output
+//TODO: Implement Rate Limiter
 exports.AIcompletionSSE = async (req, res) => {
   try {
     res.setHeader("Content-Type", "text/event-stream");
@@ -83,7 +83,7 @@ exports.AIcompletionSSE = async (req, res) => {
     const responseStream = await openai.chat.completions.create({
       model: "meta-llama/llama-3.3-70b-instruct:free",
       messages: messagesTemplate,
-      max_tokens: 2000,
+      max_tokens: 10000,
       stream: true,
       provider: {
         sort: "throughput",
@@ -136,7 +136,7 @@ exports.AIcompletion = async (req, res) => {
   const messageResponse = await openai.chat.completions.create({
     model: "meta-llama/llama-3.3-70b-instruct:free",
     messages: messagesTemplate,
-    max_tokens: 2000,
+    max_tokens: 10000,
     provider: {
       sort: "throughput",
     },
