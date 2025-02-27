@@ -32,6 +32,7 @@
     "connect-timeout": "^1.9.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "express-rate-limit": "^7.5.0",
     "helmet": "^8.0.0",
     "ioredis": "^5.5.0",
     "ip-location-api": "^2.3.2",

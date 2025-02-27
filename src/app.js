@@ -7,6 +7,7 @@ const compression = require("compression");
 const app = express();
 const logger = require("@logger/logger");
 const timeout = require("connect-timeout");
+const { limiters } = require("@middleware/rateLimiter");
 
 app.use(bparser.urlencoded({ extended: true }));
 app.use(bparser.json());
@@ -38,6 +39,9 @@ app.use(
 app.options("*", cors());
 app.use(timeout("10s", { respond: true }));
 
+// Apply global rate limiter to all requests
+app.use(limiters.global);
+
 //Entry Point Semua Route
 const route = require("./routes/route");
 app.use("", route);
@@ -56,8 +60,11 @@ app.use((err, req, res, next) => {
     logger.warn(`Warn Error: ${err.message}`);
   }
 
+  console.log(err);
+
   return res.status(err.status || 500).json({
     success: false,
+    error: err.error,
     message: err.status ? err.message : "Internal Server Error",
   });
 });
