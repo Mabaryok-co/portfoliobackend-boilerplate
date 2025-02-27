@@ -7,7 +7,7 @@ const verifyToken = async (req, res, next) => {
   if (!token)
     return res
       .status(401)
-      .send({ status: false, message: "No token, authorization denied" });
+      .send({ success: false, message: "No token, authorization denied" });
 
   try {
     const decoded = jwt.verify(token.replace("Bearer ", ""), config.jwt.secret);
@@ -22,7 +22,7 @@ const verifyToken = async (req, res, next) => {
     console.error(err);
     res
       .status(401)
-      .send({ status: false, message: "Invalid token or Expired" });
+      .send({ success: false, message: "Invalid token or Expired" });
   }
 };
 

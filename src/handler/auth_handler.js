@@ -61,7 +61,7 @@ exports.login = async function (req, res) {
   );
 
   res.status(200).send({
-    status: true,
+    success: true,
     message: "Berhasil Login",
     token: token,
   });
@@ -74,7 +74,7 @@ exports.logout = async function (req, res) {
   }
   await redisClient.del(`session:${user._id}`);
   res.status(200).send({
-    status: true,
+    success: true,
     message: "Berhasil Logout",
   });
 };

@@ -11,7 +11,7 @@ router.use("/ai", ai);
 
 router.get("/", (req, res) => {
   res.status(200).send({
-    status: true,
+    success: true,
     message: "✅V1 Endpoint Running",
   });
 });

@@ -9,7 +9,7 @@ const { userSchema } = require("@validator/schema/userSchema");
 exports.getProfile = async function (req, res) {
   if (!req.userSession) throw RouteError("User Tidak Ditemukan");
   res.status(200).send({
-    status: true,
+    success: true,
     message: "Berhasil Ambil User",
     data: req.userSession,
   });
@@ -26,7 +26,7 @@ exports.getProfilePublic = async function (req, res) {
     "-updatedAt",
   ]);
   res.status(200).send({
-    status: true,
+    success: true,
     message: "Berhasil Ambil User",
     data: user,
   });
@@ -85,7 +85,7 @@ exports.updateProfile = async function (req, res) {
   );
 
   res.status(200).send({
-    status: true,
+    success: true,
     message: "Profil Berhasil Diubah",
     data: userObj,
   });
@@ -102,7 +102,7 @@ exports.downloadCV = async function (req, res) {
     res.download(cv);
   } catch (error) {
     res.status(400).send({
-      status: false,
+      success: false,
       message: error.message,
     });
   }
@@ -130,7 +130,7 @@ exports.updateAccount = async function (req, res) {
   delete userObj.password;
   await redisClient.del(`session:${req.userSession.user._id}`);
   res.status(200).send({
-    status: true,
+    success: true,
     message: "Profile Berhasil di Update Silahkan Login Kembali",
     data: userObj,
   });

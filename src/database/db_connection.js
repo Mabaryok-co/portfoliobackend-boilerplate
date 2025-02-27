@@ -16,7 +16,7 @@ const connectDB = async () => {
   if (isTryConnect) {
     try {
       await mongoose.connect(config.database.mongo.uri, {
-        serverSelectionTimeoutMS: config.database.mongo.retry,
+        serverSelectionTimeoutMS: config.database.mongo.retry * 2,
         dbName: DB_NAME,
       });
       logger.info("✅ Mongo Connected");
@@ -38,7 +38,7 @@ const connectDB = async () => {
 };
 
 mongoose.connection.on("disconnected", () => {
-  logger.warn("⚠️ MongoDB Disconnected! Trying to reconnect...");
+  logger.warn("⚠️ MongoDB is not connected! Trying to reconnect...");
   isTryConnect = true;
   connectDB();
 });

@@ -6,12 +6,11 @@ const cors = require("cors");
 const compression = require("compression");
 const app = express();
 const logger = require("@logger/logger");
+const timeout = require("connect-timeout");
 
 app.use(bparser.urlencoded({ extended: true }));
 app.use(bparser.json());
 app.use(helmet());
-
-//Gzip compression
 app.use(compression());
 
 //CORS CONFIGURATION
@@ -37,6 +36,7 @@ app.use(
   })
 );
 app.options("*", cors());
+app.use(timeout("10s", { respond: true }));
 
 //Entry Point Semua Route
 const route = require("./routes/route");
@@ -57,7 +57,7 @@ app.use((err, req, res, next) => {
   }
 
   return res.status(err.status || 500).json({
-    status: false,
+    success: false,
     message: err.status ? err.message : "Internal Server Error",
   });
 });
@@ -65,7 +65,7 @@ app.use((err, req, res, next) => {
 //Handle if there is unknown route
 app.use((req, res) => {
   res.status(404).send({
-    status: false,
+    success: false,
     message: `Route not found`,
   });
 });

@@ -145,7 +145,7 @@ exports.AIcompletion = async (req, res) => {
   console.log(messageResponse);
 
   res.status(200).send({
-    status: true,
+    success: true,
     data: {
       id: messageResponse.id,
       created: messageResponse.created,
