@@ -2,7 +2,7 @@ const joi = require("joi");
 const { noSpace } = require("@validator/space");
 
 // All In One User Schema (Use options pick or fork to customize schema when validating using JoiValidator() method)
-exports.userSchema = joi.object({
+const userSchema = joi.object({
   username: joi.string().custom(noSpace).alphanum().required(),
   password: joi
     .string()
@@ -27,3 +27,5 @@ exports.userSchema = joi.object({
     download: joi.number(),
   }),
 });
+
+module.exports = userSchema;
