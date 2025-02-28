@@ -2,7 +2,7 @@ const joi = require("joi");
 const { noSpace } = require("@validator/space");
 const editorJS_schema = require("./editorSchema");
 
-const ProjectSchema = joi.object(
+const ProjectSchemaJOI = joi.object(
   {
     title: joi.string().required(),
     description: editorJS_schema.required(), //Object from editorJS
@@ -11,4 +11,4 @@ const ProjectSchema = joi.object(
   { timestamps: true }
 );
 
-module.exports = ProjectSchema;
+module.exports = ProjectSchemaJOI;

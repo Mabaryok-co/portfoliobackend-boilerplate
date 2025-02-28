@@ -17,6 +17,7 @@ const connectDB = async () => {
     try {
       await mongoose.connect(config.database.mongo.uri, {
         serverSelectionTimeoutMS: config.database.mongo.retry * 2,
+        connectTimeoutMS: 10000,
         dbName: DB_NAME,
       });
       logger.info("✅ Mongo Connected");
