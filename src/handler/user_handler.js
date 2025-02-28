@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const { redisClient } = require("@database/redis_connection");
 const { RouteError } = require("./errorHandlers");
 const JoiValidator = require("@validator/JoiValidator");
-const { userSchema } = require("@validator/schema/userSchema");
+const userSchema = require("@validator/schema/userSchema");
 
 exports.getProfile = async function (req, res) {
   if (!req.userSession) throw RouteError("User Tidak Ditemukan");

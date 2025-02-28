@@ -6,7 +6,7 @@ const path = require("path");
 const logger = require("@logger/logger");
 const { noSpace } = require("@validator/space");
 const JoiValidator = require("@validator/JoiValidator");
-const { userSchema } = require("@validator/schema/userSchema");
+const userSchema = require("@validator/schema/userSchema");
 
 const CACHE_FILE = path.join(__dirname, "/setup_first_user_done.tmp"); // File untuk menyimpan status setup
 
