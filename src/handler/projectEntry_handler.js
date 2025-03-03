@@ -4,6 +4,7 @@ const ProjectSchemaJOI = require("@validator/schema/projectSchema");
 const ProjectSchema = require("@models/project");
 const { RouteError } = require("./errorHandlers");
 const mongoose = require("mongoose");
+const { Route } = require("express");
 
 exports.createProjectEntry = async function (req, res) {
   const data = JoiValidator(ProjectSchemaJOI, req.body);
@@ -54,5 +55,19 @@ exports.getByIDProjectEntry = async function (req, res) {
     success: true,
     message: "Berhasil",
     data: project,
+  });
+};
+
+exports.deleteProjectEntry = async function (req, res) {
+  const id = req.params.id;
+  if (!id) throw RouteError("ID should be in request params.");
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw RouteError("Invalid ID format. Must be a valid MongoDB ObjectId");
+  }
+  const project = await ProjectSchema.findByIdAndDelete(id);
+  console.log(project);
+  return res.status(200).send({
+    success: true,
+    message: "Berhasil delete",
   });
 };

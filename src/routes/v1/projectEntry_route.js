@@ -23,5 +23,6 @@ privateRoute.put(
   bodyNotEmpty,
   errorHandlers(handler.updateProjectEntry)
 );
+privateRoute.delete("/delete/:id", errorHandlers(handler.deleteProjectEntry));
 
 module.exports = router;

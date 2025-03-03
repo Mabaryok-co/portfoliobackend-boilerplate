@@ -12,4 +12,4 @@ const ExperienceSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = ExperienceSchema;
+module.exports = mongoose.model("ExperienceSchema", ExperienceSchema);
