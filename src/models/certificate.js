@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const SertificateSchema = mongoose.Schema(
+const CertificateSchema = mongoose.Schema(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
@@ -14,4 +14,4 @@ const SertificateSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("SertificateSchema", SertificateSchema);
+module.exports = mongoose.model("CertificateSchema", CertificateSchema);

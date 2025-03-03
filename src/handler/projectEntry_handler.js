@@ -1,4 +1,3 @@
-//TODO: Create get project endpoint
 const JoiValidator = require("@validator/JoiValidator");
 const ProjectSchemaJOI = require("@validator/schema/projectSchema");
 const ProjectSchema = require("@models/project");
@@ -19,10 +18,12 @@ exports.createProjectEntry = async function (req, res) {
 
 exports.updateProjectEntry = async function (req, res) {
   const id = req.params.id;
+  if (!id) throw RouteError("ID should be in request params");
+  if (!mongoose.Types.ObjectId.isValid(id))
+    throw RouteError("Invalid ID format. Must be a valid MongoDB ObjectId.");
   const data = JoiValidator(ProjectSchemaJOI, req.body, {
     pick: Object.keys(req.body),
   });
-  console.log(data);
   const project = await ProjectSchema.findOneAndUpdate({ _id: id }, data, {
     new: true,
   });
