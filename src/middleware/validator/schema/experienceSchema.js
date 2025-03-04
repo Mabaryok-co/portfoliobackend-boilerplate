@@ -1,7 +1,7 @@
 const joi = require("joi");
 
 const ExperienceSchemaJOI = joi.object({
-  title: joi.string().required(),
+  entity: joi.string().required(),
   position: joi.string().required(),
   type: joi.string().valid("organizational", "job").required(),
   description: joi.string().required(),

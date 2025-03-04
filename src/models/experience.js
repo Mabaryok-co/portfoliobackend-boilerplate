@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const ExperienceSchema = mongoose.Schema(
   {
-    title: { type: String, required: true },
+    entity: { type: String, required: true },
     position: { type: String, required: true },
     type: { type: String, enum: ["organizational", "job"], required: true },
     description: { type: String, required: true },
