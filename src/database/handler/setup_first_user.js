@@ -1,4 +1,4 @@
-const UserModel = require("../../models/user");
+const UserModel = require("@models/user");
 const bcrypt = require("bcrypt");
 const readline = require("readline");
 const fs = require("fs");
@@ -6,7 +6,7 @@ const path = require("path");
 const logger = require("@logger/logger");
 const { noSpace } = require("@validator/space");
 const JoiValidator = require("@validator/JoiValidator");
-const { userPassSchema } = require("@validator/schema/authSchema");
+const userSchema = require("@validator/schema/userSchema");
 
 const CACHE_FILE = path.join(__dirname, "/setup_first_user_done.tmp"); // File untuk menyimpan status setup
 
@@ -21,6 +21,24 @@ async function input(query) {
       resolve(answer);
     });
   });
+}
+
+async function getUserCredential() {
+  while (true) {
+    try {
+      const username = noSpace(await input("Masukkan username: "));
+      const password = noSpace(await input("Masukkan password: "));
+      const data = {
+        username: username,
+        password: password,
+      };
+
+      JoiValidator(userSchema, data, { pick: ["username", "password"] });
+      return data;
+    } catch (error) {
+      logger.warn(`Failed To Create User: ${error.message}`);
+    }
+  }
 }
 
 exports.createUser = async function () {
@@ -42,20 +60,13 @@ exports.createUser = async function () {
       "\n⚠️  Tidak ada user di database. Silakan buat user terlebih dahulu."
     );
 
-    const username = noSpace(await input("Masukkan username: "));
-    const password = noSpace(await input("Masukkan password: "));
-    const data = {
-      username: username,
-      password: password,
-    };
+    const userData = await getUserCredential();
 
-    JoiValidator(userPassSchema, data);
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    userData.password = hashedPassword;
 
-    data.password = hashedPassword;
-
-    await UserModel.create(data);
+    await UserModel.create(userDatal);
 
     logger.info(
       "✅ User berhasil dibuat! Silahkan login menggunakan akun ini. Mohon lengkapi data diri anda di profile setelah login"

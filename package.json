@@ -14,7 +14,10 @@
     "@config": "config/config",
     "@models": "src/models",
     "@validator": "src/middleware/validator",
-    "@handler": "src/handler"
+    "@database": "src/database",
+    "@handler": "src/handler",
+    "@logsDir": "logs",
+    "@middleware": "src/middleware"
   },
   "devDependencies": {
     "express": "^4.21.2",
@@ -26,15 +29,20 @@
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "compression": "^1.8.0",
+    "connect-timeout": "^1.9.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "express-rate-limit": "^7.5.0",
     "helmet": "^8.0.0",
     "ioredis": "^5.5.0",
+    "ip-location-api": "^2.3.2",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "module-alias": "^2.2.3",
     "multer": "^1.4.5-lts.1",
+    "openai": "^4.85.4",
     "redis": "^4.7.0",
+    "request-ip": "^3.3.0",
     "uuid": "^11.0.5",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"

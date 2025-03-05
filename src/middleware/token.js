@@ -3,12 +3,11 @@ const { redisClient } = require("../database/redis_connection");
 const config = require("@config");
 
 const verifyToken = async (req, res, next) => {
-  const token = req.headers["authorization"];
-
+  const token = req.headers.authorization;
   if (!token)
     return res
       .status(401)
-      .send({ status: false, message: "No token, authorization denied" });
+      .send({ success: false, message: "No token, authorization denied" });
 
   try {
     const decoded = jwt.verify(token.replace("Bearer ", ""), config.jwt.secret);
@@ -23,7 +22,7 @@ const verifyToken = async (req, res, next) => {
     console.error(err);
     res
       .status(401)
-      .send({ status: false, message: "Invalid token or Expired" });
+      .send({ success: false, message: "Invalid token or Expired" });
   }
 };
 

@@ -6,14 +6,15 @@ This project is a collaborative effort among team members in the Mabaryok Discor
 The main goal of this project is to provide an API, and easily implement this to your own portfolio website. The project structure includes various directories such as config, controllers, models, routes, and middlewares, each playing a crucial role in data management and business logic.
 
 
-
 ## 📌Roadmap
 
 - ✅ Authentication and Authorization
 
 - ✅ Redis implementation
 
-- ⚒️ Profile Management (RU)
+- ✅ Profile Management (RU)
+
+- ✅ AI Writing Enhancement
 
 - ⚒️ Work / Project Showcase (CRUD)
 

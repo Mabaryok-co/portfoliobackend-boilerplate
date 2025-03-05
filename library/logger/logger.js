@@ -3,7 +3,13 @@ const dailyRotateFile = require("winston-daily-rotate-file");
 const path = require("path");
 const config = require("@config");
 
-const logDir = path.join(__dirname, "../../logs");
+const baseLogDir = path.join(__dirname, "../../logs");
+
+//New folder everyday
+const getLogDir = () => {
+  const date = new Date().toISOString().split("T")[0];
+  return path.join(baseLogDir, date);
+};
 
 const datePattern = (Freq) => {
   switch (Freq) {
@@ -36,8 +42,8 @@ const logLevel = defaultLevel.slice(defaultLevel.indexOf(minLogLevel));
 const createDailyTransportFile = (level) => {
   return new dailyRotateFile({
     level: level,
-    filename: `${level}-%DATE%.log`,
-    dirname: logDir,
+    filename: `${level == "error" ? "error" : "all"}-%DATE%.log`,
+    dirname: getLogDir(),
     datePattern: datePattern(config.log.freq),
     maxSize: `${config.log.maxSize}m`,
     maxFiles: `${config.log.maxAge}d`,
@@ -47,23 +53,20 @@ const createDailyTransportFile = (level) => {
 //Creating diffrent file for log based on the level
 const logTransport = logLevel.map((level) => createDailyTransportFile(level));
 
-const enumerateErrorFormat = winston.format((info) => {
-  if (info instanceof Error) {
-    Object.assign(info, { message: info.stack });
-  }
-  return info;
-});
-
 const logger = winston.createLogger({
   level: minLogLevel,
   format: winston.format.combine(
-    enumerateErrorFormat(),
+    winston.format.errors({ stack: true }),
     winston.format.colorize(),
     winston.format.splat(),
     winston.format.timestamp({ format: datePattern("hourly") }),
-    winston.format.printf(
-      ({ timestamp, level, message }) => `${timestamp} - [${level}]: ${message}`
-    )
+    winston.format.printf(({ timestamp, level, message, stack }) => {
+      //Include stack trace
+      if (stack) {
+        return `${timestamp} - [${level}]: ${message} \n ${stack}`;
+      }
+      return `${timestamp} - [${level}]: ${message}`;
+    })
   ),
   transports: [
     new winston.transports.Console({

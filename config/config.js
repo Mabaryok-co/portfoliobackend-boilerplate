@@ -16,7 +16,6 @@ const ENV_SCHEMA = Joi.object({
   REDIS_HOST: Joi.string().required(),
   REDIS_PORT: Joi.number().required(),
   REDIS_PASSWORD: Joi.string().required(),
-  REDIS_CONNECTION_TIMEOUT_IN_MS: Joi.number().default(5000),
   REDIS_RETRY_STRATEGY_MULTIPLIER_IN_MS: Joi.string().default(1000),
 
   FRONTEND_URL: Joi.string().uri().optional().allow(""),
@@ -24,9 +23,13 @@ const ENV_SCHEMA = Joi.object({
 
   MONGO_URI: Joi.string().required(),
   DB_NAME: Joi.string().required(),
+  MONGO_RETRY_IN_MS: joi.number().optional().default(5000),
 
   JWT_SECRET: Joi.string().required(),
   JWT_EXPIRATION_MINUTES: Joi.number().required(),
+
+  AI_API_KEY: Joi.string().required(),
+  AI_BASE_URL: Joi.string().uri().required(),
 
   LOG_DIR: Joi.string().optional().allow(""),
   LOG_LEVEL: Joi.string()
@@ -59,17 +62,21 @@ const config = {
     secret: env.JWT_SECRET,
     expiration: env.JWT_EXPIRATION_MINUTES,
   },
+  ai: {
+    apiKey: env.AI_API_KEY,
+    baseUrl: env.AI_BASE_URL,
+  },
   redis: {
     host: env.REDIS_HOST,
     port: env.REDIS_PORT,
     password: env.REDIS_PASSWORD,
-    timeout: env.REDIS_CONNECTION_TIMEOUT_IN_MS,
     retryMultiplier: env.REDIS_RETRY_STRATEGY_MULTIPLIER_IN_MS,
   },
   database: {
     mongo: {
       uri: env.MONGO_URI,
       dbName: env.DB_NAME,
+      retry: env.MONGO_RETRY_IN_MS,
     },
   },
   cors: {
