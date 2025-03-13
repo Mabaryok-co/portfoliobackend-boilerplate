@@ -1,4 +1,4 @@
-const { RouteError } = require("@handler/errorHandlers");
+const AppError = require("@AppError");
 
 /**
  * Middleware untuk memeriksa apakah request body kosong.
@@ -10,7 +10,7 @@ const { RouteError } = require("@handler/errorHandlers");
  */
 exports.bodyNotEmpty = (req, res, next) => {
   if (Object.keys(req.body).length === 0) {
-    return next(RouteError("Body Tidak Boleh Kosong", 400));
+    return next(new AppError("Body Tidak Boleh Kosong", 400));
   }
   next();
 };

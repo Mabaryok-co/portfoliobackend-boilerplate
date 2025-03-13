@@ -1,13 +1,13 @@
 const JoiValidator = require("@validator/JoiValidator");
 const CertificateSchemaJOI = require("@validator/schema/certificateSchema");
 const CertificateSchema = require("@models/certificate");
-const { RouteError } = require("./errorHandlers");
+const AppError = require("@AppError");
 const { default: mongoose } = require("mongoose");
 
 exports.createCertificateEntry = async function (req, res) {
   const data = JoiValidator(CertificateSchemaJOI, req.body);
   const certificate = await CertificateSchema.create(data);
-  if (!certificate) throw RouteError("failed to create data");
+  if (!certificate) throw new AppError("failed to create data");
   return res.status(200).send({
     success: true,
     message: "Successfully create certificate entry",
@@ -17,9 +17,9 @@ exports.createCertificateEntry = async function (req, res) {
 
 exports.updateCertificateEntry = async function (req, res) {
   const id = req.params.id;
-  if (!id) throw RouteError("ID should be in request params");
+  if (!id) throw new AppError("ID should be in request params");
   if (!mongoose.Types.ObjectId.isValid(id))
-    throw RouteError("Invalid ID format. Must be a valid MongoDB ObjectId.");
+    throw new AppError("Invalid ID format. Must be a valid MongoDB ObjectId.");
   //TODO: JOI VALIDATOR IF THERE IS NO OBJECT KEYS FROM "PICK" RETURN ERROR
   const data = JoiValidator(CertificateSchemaJOI, req.body, {
     pick: Object.keys(req.body),
@@ -31,7 +31,7 @@ exports.updateCertificateEntry = async function (req, res) {
     data,
     { new: true }
   );
-  if (!updatedCertificate) throw RouteError("Failed to update certificate");
+  if (!updatedCertificate) throw new AppError("Failed to update certificate");
   return res.status(200).send({
     success: true,
     message: "Successfully update certificate",
@@ -41,7 +41,7 @@ exports.updateCertificateEntry = async function (req, res) {
 
 exports.getAllCertificateEntry = async function (req, res) {
   const certificate = await CertificateSchema.find();
-  if (!certificate) throw RouteError("Certificate are empty");
+  if (!certificate) throw new AppError("Certificate are empty");
   return res.status(200).send({
     success: true,
     message: "Successfully Get All Certificate",
@@ -51,11 +51,11 @@ exports.getAllCertificateEntry = async function (req, res) {
 
 exports.getByIdCertificateEntry = async function (req, res) {
   const id = req.params.id;
-  if (!id) throw RouteError("ID should be in request params");
+  if (!id) throw new AppError("ID should be in request params");
   if (!mongoose.Types.ObjectId.isValid(id))
-    throw RouteError("Invalid ID format. Must be a valid MongoDB ObjectId.");
+    throw new AppError("Invalid ID format. Must be a valid MongoDB ObjectId.");
   const certificate = await CertificateSchema.findById(id);
-  if (!certificate) throw RouteError("Certificate not found");
+  if (!certificate) throw new AppError("Certificate not found");
   return res.status(200).send({
     success: true,
     message: "Successfully Get Certificate",
@@ -65,11 +65,12 @@ exports.getByIdCertificateEntry = async function (req, res) {
 
 exports.deleteCertificate = async function (req, res) {
   const id = req.params.id;
-  if (!id) throw RouteError("ID should be in request params");
+  if (!id) throw new AppError("ID should be in request params");
   if (!mongoose.Types.ObjectId.isValid(id))
-    throw RouteError("Invalid ID format. Must be a valid MongoDB ObjectId.");
+    throw new AppError("Invalid ID format. Must be a valid MongoDB ObjectId.");
   const certificate = await CertificateSchema.findByIdAndDelete(id);
-  if (!certificate) throw RouteError("Certificate Not Found. Failed to Delete");
+  if (!certificate)
+    throw new AppError("Certificate Not Found. Failed to Delete");
   return res.status(200).send({
     success: true,
     message: "Successfully Delete Certificate",

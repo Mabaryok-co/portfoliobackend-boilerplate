@@ -2,7 +2,6 @@ const logger = require("@logger/logger");
 const config = require("@config");
 const Redis = require("ioredis");
 const { connect } = require("mongoose");
-const { RouteError } = require("../handler/errorHandlers");
 
 let delay = config.redis.retryMultiplier;
 

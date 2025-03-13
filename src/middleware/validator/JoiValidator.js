@@ -1,5 +1,5 @@
 const joi = require("joi");
-const { RouteError } = require("@handler/errorHandlers");
+const AppError = require("@AppError");
 
 // Only Select Some Attributes in schmea. Example: JoiValidator(userSchema, value, { pick: ['username', 'password'] });
 const pickAttributes = (schema, attributes) => {
@@ -41,7 +41,7 @@ const JoiValidator = (schema, value, options = {}) => {
     const errorMessages = error.details
       .map((detail) => detail.message)
       .join(", ");
-    throw RouteError(`Input Validation error: ${errorMessages}`);
+    throw new AppError(`Input Validation error: ${errorMessages}`);
   }
 
   return valid;

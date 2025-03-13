@@ -3,13 +3,14 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const UserModel = require("@models/user");
 const config = require("@config");
-const { RouteError } = require("./errorHandlers");
+const AppError = require("@AppError");
 const { noSpace } = require("@validator/space");
 const JoiValidator = require("@validator/JoiValidator");
 const userSchema = require("@validator/schema/userSchema");
 const reqIp = require("request-ip");
 const { lookup } = require("ip-location-api");
 const logger = require("@logger/logger");
+const errorCode = require("@errorCode");
 
 exports.login = async function (req, res) {
   const data = {
@@ -20,7 +21,7 @@ exports.login = async function (req, res) {
   JoiValidator(userSchema, data, { pick: ["username", "password"] });
 
   const user = await UserModel.findOne({ username: data.username });
-  const authError = RouteError("Username atau Password salah!");
+  const authError = new AppError("Username atau Password salah!", 400);
 
   if (!user) {
     throw authError;
@@ -70,7 +71,7 @@ exports.login = async function (req, res) {
 exports.logout = async function (req, res) {
   const user = req.userSession.user;
   if (!user) {
-    throw RouteError("Anda tidak sedang login");
+    throw new AppError("Anda tidak sedang login");
   }
   await redisClient.del(`session:${user._id}`);
   res.status(200).send({

@@ -17,7 +17,13 @@
     "@database": "src/database",
     "@handler": "src/handler",
     "@logsDir": "logs",
-    "@middleware": "src/middleware"
+    "@middleware": "src/middleware",
+    "@tryCatch": "src/utils/tryCatch",
+    "@utils" : "src/utils",
+    "@errorCode" : "src/utils/errorCode",
+    "@errorRules" : "src/utils/error_rules/error_rules_index.js",
+    "@getErrorResponse" : "src/utils/getErrorResponse",
+    "@AppError" : "src/utils/AppErrorClass"
   },
   "devDependencies": {
     "express": "^4.21.2",

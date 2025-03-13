@@ -2,12 +2,12 @@ const fileHandler = require("./file_handler");
 const UserModel = require("@models/user");
 const bcrypt = require("bcrypt");
 const { redisClient } = require("@database/redis_connection");
-const { RouteError } = require("./errorHandlers");
+const AppError = require("@AppError");
 const JoiValidator = require("@validator/JoiValidator");
 const userSchema = require("@validator/schema/userSchema");
 
 exports.getProfile = async function (req, res) {
-  if (!req.userSession) throw RouteError("User Tidak Ditemukan");
+  if (!req.userSession) throw new AppError("User Tidak Ditemukan");
   res.status(200).send({
     success: true,
     message: "Berhasil Ambil User",
@@ -36,7 +36,7 @@ exports.updateProfile = async function (req, res) {
   if (req.body.username || req.body.password) {
     //Jika ada kesalahan, maka hapus file yang sudah di upload multer
     await fileHandler.deleteUploadedFiles(req.files);
-    throw RouteError(
+    throw AppError(
       "Endpoint ini tidak bisa digunakan untuk mengubah username dan password"
     );
   }
@@ -72,7 +72,7 @@ exports.updateProfile = async function (req, res) {
     }
   );
 
-  if (!userUpdated) throw RouteError("User Tidak Ditemukan. Gagal Update");
+  if (!userUpdated) throw new AppError("User Tidak Ditemukan. Gagal Update");
 
   userObj = userUpdated.toObject();
   delete userObj.password;
@@ -96,7 +96,7 @@ exports.downloadCV = async function (req, res) {
     //Karena cuman ada 1 user disini dan pakai find ambil satu dan cari id yang paling lama dibuat (pertama)
     const user = await UserModel.findOne().sort({ _id: 1 });
     const cv = user.cv.url;
-    if (!cv) throw RouteError("CV Tidak Ditemukan");
+    if (!cv) throw new AppError("CV Tidak Ditemukan");
     user.cv.download += 1;
     await user.save();
     res.download(cv);
@@ -122,7 +122,7 @@ exports.updateAccount = async function (req, res) {
     { new: true }
   );
   if (!user)
-    throw RouteError(
+    throw AppError(
       "User Tidak Ditemukan. Pastikan Token Valid atau User memang telah dihapus"
     );
 

@@ -8,6 +8,7 @@ const app = express();
 const logger = require("@logger/logger");
 const timeout = require("connect-timeout");
 const { limiters } = require("@middleware/rateLimiter");
+const errorHandler = require("./middleware/errorHandler");
 
 app.use(bparser.urlencoded({ extended: true }));
 app.use(bparser.json());
@@ -31,13 +32,13 @@ app.use(
         callback(null, true);
       }
 
-      callback(Object.assign(new Error("CORS NOT ALLOWED"), { status: 403 }));
+      callback(Object.assign(new Error("CORS_NOT_ALLOWED"), { status: 403 }));
     },
     credentials: true,
   })
 );
 app.options("*", cors());
-app.use(timeout("10s", { respond: true }));
+app.use(timeout("15s", { respond: true }));
 
 // Apply global rate limiter to all requests
 app.use(limiters.global);
@@ -46,29 +47,6 @@ app.use(limiters.global);
 const route = require("./routes/route");
 app.use("", route);
 
-//Global Error handler for Route (Including CORS)
-//Secara default error dari route akan berisi status 400 atau ditetapkan user.
-//Jika tidak ditetapkan maka akan menggunakan error 500, yang artinya ada kesalahan sistem
-app.use((err, req, res, next) => {
-  if (err.message === "CORS NOT ALLOWED") {
-    logger.warn(`CORS ditolak untuk origin: ${req.headers.origin}`);
-  }
-
-  if (!err.status) {
-    logger.error(err);
-  } else {
-    logger.warn(`Warn Error: ${err.message}`);
-  }
-
-  console.log(err);
-
-  return res.status(err.status || 500).json({
-    success: false,
-    error: err.error,
-    message: err.status ? err.message : "Internal Server Error",
-  });
-});
-
 //Handle if there is unknown route
 app.use((req, res) => {
   res.status(404).send({
@@ -76,5 +54,7 @@ app.use((req, res) => {
     message: `Route not found`,
   });
 });
+
+app.use(errorHandler);
 
 module.exports = app;
