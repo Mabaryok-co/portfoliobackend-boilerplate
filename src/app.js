@@ -9,9 +9,12 @@ const logger = require("@logger/logger");
 const timeout = require("connect-timeout");
 const { limiters } = require("@middleware/rateLimiter");
 const errorHandler = require("./middleware/errorHandler");
+const cookieparser = require("cookie-parser");
 
+app.use(timeout("15s", { respond: true }));
 app.use(bparser.urlencoded({ extended: true }));
 app.use(bparser.json());
+app.use(cookieparser());
 app.use(helmet());
 app.use(compression());
 
@@ -38,7 +41,6 @@ app.use(
   })
 );
 app.options("*", cors());
-app.use(timeout("15s", { respond: true }));
 
 // Apply global rate limiter to all requests
 app.use(limiters.global);

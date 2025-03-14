@@ -15,6 +15,7 @@ const errorHandler = (err, req, res, next) => {
   };
 
   console.error(err);
+  //TODO: Add detailed log if there is unknown error
   if (statusCode == 500) {
     logger.error(err);
   } else {
