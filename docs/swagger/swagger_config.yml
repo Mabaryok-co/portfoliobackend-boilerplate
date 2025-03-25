@@ -1,0 +1,3289 @@
+openapi: 3.0.0
+info:
+  title: Web Portfolio Backend
+  description: >-
+    This project is designed to provide developers with an **easy-to-integrate
+    backend** for managing and displaying their **profile data and portfolio
+    content**. It offers flexibility for developers who want to build and
+    customize their portfolio without handling backend complexities. Also! There
+    is built in Open Source LLM to improve your writing in website!
+
+
+    This is a **collaborative effort** among team members of the **Mabaryok
+    Discord Community**, focusing solely on the **server-side backend** to
+    provide a set of **APIs** for frontend applications built by the community.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+components:
+  securitySchemes:
+    noauthAuth:
+      type: http
+      scheme: noauth
+    bearerAuth:
+      type: http
+      scheme: bearer
+tags:
+  - name: Profile
+    description: >-
+      This Section handles all endpoint about user profile. You could get User
+      Profile, download the cv, update user profile, and so on
+
+
+      All endpoint are specified in folder. Public folder meaning to access
+      those endpoint doesn't need any token. Private folder, need token to
+      access the endpoint.
+  - name: Profile > Public
+    description: >-
+      This folder contains public endpoints that can be accessed without
+      authentication.
+  - name: Profile > Private (Need Token)
+    description: >-
+      This folder contains private endpoints that require authentication via
+      Bearer Token.
+  - name: AI (Need Token)
+  - name: Project Entry
+  - name: Project Entry > Private (Need Token)
+    description: >-
+      This folder contains private endpoints that require authentication via
+      Bearer Token.
+  - name: Project Entry > Public
+    description: >-
+      This folder contains public endpoints that can be accessed without
+      authentication.
+  - name: Certificate Entry
+  - name: Certificate Entry > Private (Need token)
+    description: >-
+      This folder contains private endpoints that require authentication via
+      Bearer Token.
+  - name: Certificate Entry > Public
+    description: >-
+      This folder contains public endpoints that can be accessed without
+      authentication.
+  - name: Experience Entry
+  - name: Experience Entry > Private (Need token)
+    description: >-
+      This folder contains private endpoints that require authentication via
+      Bearer Token.
+  - name: Experience Entry > Public
+    description: >-
+      This folder contains public endpoints that can be accessed without
+      authentication.
+  - name: File or Image Endpoint
+    description: Separated file or image endpoint for easy and better handling
+paths:
+  /api/v1/user/download/cv:
+    get:
+      tags:
+        - Profile > Public
+      summary: '[Profile] Download CV'
+      description: |
+        ### Endpoint: [Profile] Download CV
+        - **Method:** GET
+        - **Path:** `api/v1/user/download/cv`
+        - **Authentication:** Not Required
+        - **Description:**
+          - General API endpoint.
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/user/profile:
+    get:
+      tags:
+        - Profile > Public
+      summary: '[Profile] Get Profile'
+      description: |
+        ### Endpoint: [Profile] Get Profile
+        - **Method:** GET
+        - **Path:** `api/v1/user/profile`
+        - **Authentication:** Not Required
+        - **Description:**
+          - Retrieves user profile information including name, bio, and social links.
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 1000;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '1000'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '999'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '900'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '200'
+            ETag:
+              schema:
+                type: string
+                example: W/"c8-bFIVyVd11JqgW2alhNdKqrKNhhg"
+            Date:
+              schema:
+                type: string
+                example: Wed, 19 Mar 2025 14:07:35 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Berhasil Ambil User
+                data:
+                  - cv:
+                      download: 0
+                      url: null
+                    name: Lintang Anugerah
+                    bio: Bio
+                    image: https://placehold.co/400
+                    social:
+                      - appname: Linkedin
+                        link: https://www.linkedin.com/in/lintanganugerah/
+                      - appname: GitHub
+                        link: https://github.com/lintanganugerah
+    put:
+      tags:
+        - Profile > Private (Need Token)
+      summary: '[Profile] Update Profile'
+      description: |
+        ### Endpoint: [Profile] Update Profile
+        - **Method:** PUT
+        - **Path:** `api/v1/user/profile`
+        - **Authentication:** Required
+        - **Request Body:**
+          - `name` (text): No description
+          - `bio` (text): No description
+          - `social` (text): No description
+        - **Description:**
+          - Updates user profile data such as name, bio, and contact information.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Lintang A.
+                bio:
+                  type: string
+                  example: This is revised bio
+                social:
+                  type: string
+                  example: >-
+                    [{"app_name": "Github", "link":
+                    "https://github.com/johndoe"}, {"app_name": "LinkedIn",
+                    "link": "https://linkedin.com/johndoe"}]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '638'
+            ETag:
+              schema:
+                type: string
+                example: W/"27e-2VSST7yZHyfZqWau0DNaH6ADY7E"
+            Date:
+              schema:
+                type: string
+                example: Tue, 11 Feb 2025 07:39:30 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Profil Berhasil Diubah
+                data:
+                  cv:
+                    download: 0
+                    url: >-
+                      public/assets/upload_by_user/cv/1739259570214e388a909-fe1b-40c0-8587-bba7891aa610-cv-Revisiasdadsad.pdf
+                  _id: 67a9e3183d5dc1f063e1ca3f
+                  username: lintangaja4
+                  name: Revisi asdadsad
+                  bio: Bio hasil revisi
+                  contact: '126317263728163'
+                  image: >-
+                    public/assets/upload_by_user/image/1739259570211cfee19f9-07b1-4eeb-8ec7-2658d5669414-image-Revisiasdadsad.jpg
+                  social:
+                    - app_name: tesRevisi
+                      link: https://github.com/johndoe
+                      _id: 67aafeb213d40ff406377d99
+                  createdAt: '2025-02-10T11:29:28.842Z'
+                  updatedAt: '2025-02-11T07:39:30.373Z'
+                  __v: 0
+        '400':
+          description: Bad Request
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '638'
+            ETag:
+              schema:
+                type: string
+                example: W/"27e-2VSST7yZHyfZqWau0DNaH6ADY7E"
+            Date:
+              schema:
+                type: string
+                example: Tue, 11 Feb 2025 07:39:30 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: false
+                message: >-
+                  Endpoint ini tidak bisa digunakan untuk mengubah username dan
+                  password
+  /api/v1/user/profile/account:
+    put:
+      tags:
+        - Profile > Private (Need Token)
+      summary: '[Profile] Update Account Settings'
+      description: "### Endpoint: [Profile] Update Account Settings\n- **Method:** PUT\n- **Path:** `api/v1/user/profile/account`\n- **Authentication:** Required\n- **Request Body:**\n  - `{\r\n    \"username\": \"newUsername\",\r\n    \"password\": \"passwordTes\"\r\n}`\n- **Description:**\n  - Updates user profile data such as name, bio, and contact information.\n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                username: newUsername
+                password: passwordTes
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '665'
+            ETag:
+              schema:
+                type: string
+                example: W/"299-uMGwpdqWc0aZZkoL/RyckLqYGII"
+            Date:
+              schema:
+                type: string
+                example: Tue, 11 Feb 2025 08:07:55 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: true
+                message: Profile Berhasil di Update Silahkan Login Kembali
+                data:
+                  cv:
+                    url: >-
+                      public/assets/upload_by_user/cv/1739259570214e388a909-fe1b-40c0-8587-bba7891aa610-cv-Revisiasdadsad.pdf
+                    download: 1
+                  _id: 67a9e3183d5dc1f063e1ca3f
+                  username: newUsername
+                  name: Revisi asdadsad
+                  bio: Bio hasil revisi
+                  contact: '126317263728163'
+                  image: >-
+                    public/assets/upload_by_user/image/1739259570211cfee19f9-07b1-4eeb-8ec7-2658d5669414-image-Revisiasdadsad.jpg
+                  social:
+                    - app_name: tesRevisi
+                      link: https://github.com/johndoe
+                      _id: 67aafeb213d40ff406377d99
+                  createdAt: '2025-02-10T11:29:28.842Z'
+                  updatedAt: '2025-02-11T08:07:55.009Z'
+                  __v: 0
+  /api/v1/ai/completion/enhancewriting/sse:
+    post:
+      tags:
+        - AI (Need Token)
+      summary: '[AI] Enhance Writing (SSE)'
+      description: "### Endpoint: [AI] Enhance Writing (SSE)\n- **Method:** POST\n- **Path:** `api/v1/ai/completion/enhancewriting/sse`\n- **Authentication:** Not Required\n- **Request Body:**\n  - `{\r\n    \"messages\" : \"**PART**: bio. **TEXT**: I do digital marketing. I run ads, manage social media, and analyze data. I try to help businesses grow online.\"\r\n}`\n- **Description:**\n  - Enhances text using AI by providing structured input for improvement.\n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                messages: >-
+                  **PART**: bio. **TEXT**: I do digital marketing. I run ads,
+                  manage social media, and analyze data. I try to help
+                  businesses grow online.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Content-Type:
+              schema:
+                type: string
+                example: text/event-stream
+            Cache-Control:
+              schema:
+                type: string
+                example: no-cache
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Encoding:
+              schema:
+                type: string
+                example: br
+            Date:
+              schema:
+                type: string
+                example: Thu, 27 Feb 2025 07:55:52 GMT
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: >+
+                data: {"type":"connection","message":"Connection established.
+                Waiting for model response...","state":"start","done":false}
+
+
+                data: {"content":"Results-Driven Digital"}
+
+
+                data: {"content":" Marketing Specialist"}
+
+
+                data: {"content":". Strategic and innovative"}
+
+
+                data: {"content":" marketing professional"}
+
+
+                data: {"content":" with expertise in leveraging"}
+
+
+                data: {"content":" digital channels to"}
+
+
+                data: {"content":" drive business growth"}
+
+
+                data: {"content":", enhance brand visibility"}
+
+
+                data: {"content":", and foster meaningful"}
+
+
+                data: {"content":" customer engagement"}
+
+
+                data: {"content":". Proven track record"}
+
+
+                data: {"content":" of successfully managing"}
+
+
+                data: {"content":" and optimizing online"}
+
+
+                data: {"content":" advertising campaigns"}
+
+
+                data: {"content":", social media platforms"}
+
+
+                data: {"content":", and data analysis to"}
+
+
+                data: {"content":" inform data-driven decisions"}
+
+
+                data: {"content":". Adept at developing"}
+
+
+                data: {"content":" and implementing tailored"}
+
+
+                data: {"content":" digital marketing strategies"}
+
+
+                data: {"content":" that boost online presence"}
+
+
+                data: {"content":", conversions, and revenue"}
+
+
+                data: {"content":". Passionate about staying"}
+
+
+                data: {"content":" up-to-date with the"}
+
+
+                data: {"content":" latest industry trends"}
+
+
+                data: {"content":" and technologies, including"}
+
+
+                data: {"content":" SEO, PPC, email marketing"}
+
+
+                data: {"content":", and social media marketing"}
+
+
+                data: {"content":", to deliver impactful"}
+
+
+                data: {"content":" and measurable results"}
+
+
+                data: {"content":" for businesses in the"}
+
+
+                data: {"content":" digital landscape."}
+
+
+                data: {"finalMessage":"Results-Driven Digital Marketing
+                Specialist. Strategic and innovative marketing professional with
+                expertise in leveraging digital channels to drive business
+                growth, enhance brand visibility, and foster meaningful customer
+                engagement. Proven track record of successfully managing and
+                optimizing online advertising campaigns, social media platforms,
+                and data analysis to inform data-driven decisions. Adept at
+                developing and implementing tailored digital marketing
+                strategies that boost online presence, conversions, and revenue.
+                Passionate about staying up-to-date with the latest industry
+                trends and technologies, including SEO, PPC, email marketing,
+                and social media marketing, to deliver impactful and measurable
+                results for businesses in the digital landscape."}
+
+
+                data: {"state":"finish","done":true}
+
+  /api/v1/ai/completion/enhancewriting:
+    post:
+      tags:
+        - AI (Need Token)
+      summary: '[AI] Enhance Writing'
+      description: "### Endpoint: [AI] Enhance Writing\n- **Method:** POST\n- **Path:** `api/v1/ai/completion/enhancewriting`\n- **Authentication:** Not Required\n- **Request Body:**\n  - `{\r\n    \"messages\" : \"**PART**: experience. **TEXT**: • Managed projects and made sure they were finished on time. • Talked with the team and clients about project progress. • Solved problems when issues happened in the project. • Used some tools to organize tasks.\"\r\n}`\n- **Description:**\n  - Enhances text using AI by providing structured input for improvement.\n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                messages: >-
+                  **PART**: experience. **TEXT**: • Managed projects and made
+                  sure they were finished on time. • Talked with the team and
+                  clients about project progress. • Solved problems when issues
+                  happened in the project. • Used some tools to organize tasks.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            ETag:
+              schema:
+                type: string
+                example: W/"549-4jUgS//ZLtu8OLd3gbw0kvxEMpk"
+            Content-Encoding:
+              schema:
+                type: string
+                example: br
+            Date:
+              schema:
+                type: string
+                example: Thu, 27 Feb 2025 07:53:33 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                data:
+                  id: gen-1740642810-17wVXe3h2XLEuoaKiycb
+                  created: 1740642810
+                  message:
+                    - role: user
+                      content: >-
+                        **PART**: experience. **TEXT**: • Managed projects and
+                        made sure they were finished on time. • Talked with the
+                        team and clients about project progress. • Solved
+                        problems when issues happened in the project. • Used
+                        some tools to organize tasks.
+                    - role: assistant
+                      content: >-
+                        - Spearheaded multiple projects from initiation to
+                        completion, ensuring timely delivery and exceeding
+                        client expectations by up to 95% through meticulous
+                        planning and resource allocation.
+
+                        - Fostered strong relationships with cross-functional
+                        teams and clients, providing regular progress updates
+                        and insights to ensure seamless collaboration and issue
+                        resolution, resulting in a 30% increase in client
+                        satisfaction.
+
+                        - Proactively identified and resolved project
+                        roadblocks, leveraging analytical and problem-solving
+                        skills to mitigate risks and implement corrective
+                        actions, thereby minimizing delays and cost overruns by
+                        25%.
+
+                        - Utilized a range of project management tools,
+                        including Asana, Trello, and MS Project, to streamline
+                        task assignment, tracking, and prioritization, enhancing
+                        team productivity by 40% and facilitating data-driven
+                        decision-making.
+                      refusal: null
+                  prompt_tokens: 653
+                  completion_tokens: 149
+                  total_tokens: 802
+  /api/v1/project/create:
+    post:
+      tags:
+        - Project Entry > Private (Need Token)
+      summary: '[Project Entry] Create Project'
+      description: "### Endpoint: [Project Entry] Create Project\n- **Method:** POST\n- **Path:** `api/v1/project/create`\n- **Authentication:** Required\n- **Request Body:**\n  - `{\r\n  \"title\": \"Tes 2\",\r\n  \"description\": {\r\n    \"time\": 1740727077181,\r\n    \"blocks\": [\r\n      {\r\n        \"id\": \"mhTl6ghSkV\",\r\n        \"type\": \"paragraph\",\r\n        \"data\": {\r\n          \"text\": \"Hey. Meet the new Editor. On this picture you can see it in action. Then, try a demo 🤓\"\r\n        }\r\n      },\r\n      {\r\n        \"id\": \"l98dyx3yjb\",\r\n        \"type\": \"header\",\r\n        \"data\": {\r\n          \"text\": \"Key features\",\r\n          \"level\": 3\r\n        }\r\n      },\r\n      {\r\n        \"id\": \"os_YI4eub4\",\r\n        \"type\": \"list\",\r\n        \"data\": {\r\n          \"type\": \"unordered\",\r\n          \"items\": [\r\n            \"It is a block-style editor\",\r\n            \"It returns clean data output in JSON\",\r\n            \"Designed to be extendable and pluggable with a <a href=\\\"https://editorjs.io/creating-a-block-tool\\\">simple API</a>\"\r\n          ]\r\n        }\r\n      },\r\n      {\r\n        \"id\": \"1yKeXKxN7-\",\r\n        \"type\": \"header\",\r\n        \"data\": {\r\n          \"text\": \"What does it mean «block-styled editor»\",\r\n          \"level\": 3\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"technology\": \"Next JS, Node JS\"\r\n}`\n- **Description:**\n  - Creates a new project with title, description, and technology details.\n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: Tes 2
+                description:
+                  time: 1740727077181
+                  blocks:
+                    - id: mhTl6ghSkV
+                      type: paragraph
+                      data:
+                        text: >-
+                          Hey. Meet the new Editor. On this picture you can see
+                          it in action. Then, try a demo 🤓
+                    - id: l98dyx3yjb
+                      type: header
+                      data:
+                        text: Key features
+                        level: 3
+                    - id: os_YI4eub4
+                      type: list
+                      data:
+                        type: unordered
+                        items:
+                          - It is a block-style editor
+                          - It returns clean data output in JSON
+                          - >-
+                            Designed to be extendable and pluggable with a <a
+                            href="https://editorjs.io/creating-a-block-tool">simple
+                            API</a>
+                    - id: 1yKeXKxN7-
+                      type: header
+                      data:
+                        text: What does it mean «block-styled editor»
+                        level: 3
+                technology: Next JS, Node JS
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '298'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '729'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '656'
+            ETag:
+              schema:
+                type: string
+                example: W/"290-YnjfJEvX2WXaoSEz+R9dbE7eLfI"
+            Date:
+              schema:
+                type: string
+                example: Fri, 28 Feb 2025 13:38:57 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Berhasil
+                data:
+                  title: aaa
+                  description:
+                    time: 1740727077181
+                    blocks:
+                      - type: paragraph
+                        data:
+                          text: >-
+                            Hey. Meet the new Editor. On this picture you can
+                            see it in action. Then, try a demo 🤓
+                      - type: header
+                        data:
+                          text: Key features
+                          level: 3
+                      - type: list
+                        data:
+                          type: unordered
+                          items:
+                            - It is a block-style editor
+                            - It returns clean data output in JSON
+                            - >-
+                              Designed to be extendable and pluggable with a <a
+                              href="https://editorjs.io/creating-a-block-tool">simple
+                              API</a>
+                      - type: header
+                        data:
+                          text: What does it mean «block-styled editor»
+                          level: 3
+                  technology: Next JS, Node JS
+  /api/v1/project/update/{id}:
+    put:
+      tags:
+        - Project Entry > Private (Need Token)
+      summary: '[Project Entry] Update'
+      description: "### Endpoint: [Project Entry] Update\n- **Method:** PUT\n- **Path:** `api/v1/project/update/:id`\n- **Authentication:** Required\n- **Request Body:**\n  - `{\r\n    \"title\" : \"revisi lagi\",\r\n    \"description\": {\r\n        \"time\": 1740727077181,\r\n        \"blocks\": [\r\n            {\r\n                \"type\": \"paragraph\",\r\n                \"data\": {\r\n                    \"text\": \"Hey. Meet the new Editor. On this picture you can see it in action. Then, try a demo 🤓\"\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}`\n- **Description:**\n  - Updates an existing project entry.\n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: revisi lagi
+                description:
+                  time: 1740727077181
+                  blocks:
+                    - type: paragraph
+                      data:
+                        text: >-
+                          Hey. Meet the new Editor. On this picture you can see
+                          it in action. Then, try a demo 🤓
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 67c1bc71ba0ae3bc8bae72b3
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '292'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '813'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '396'
+            ETag:
+              schema:
+                type: string
+                example: W/"18c-FzL0sRH9YeL8Foj2xbBVLif91hk"
+            Date:
+              schema:
+                type: string
+                example: Fri, 28 Feb 2025 14:32:01 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Berhasil
+                data:
+                  _id: 67c1bc71ba0ae3bc8bae72b3
+                  title: revisi lagi
+                  description:
+                    time: 1740727077181
+                    blocks:
+                      - type: paragraph
+                        data:
+                          text: >-
+                            Hey. Meet the new Editor. On this picture you can
+                            see it in action. Then, try a demo 🤓
+                  technology: Next JS, Node JS
+                  createdAt: '2025-02-28T13:38:57.537Z'
+                  updatedAt: '2025-02-28T14:32:00.984Z'
+                  __v: 0
+  /api/v1/project/delete/{id}:
+    delete:
+      tags:
+        - Project Entry > Private (Need Token)
+      summary: '[Project Entry] Delete project'
+      description: |
+        ### Endpoint: [Project Entry] Delete project
+        - **Method:** DELETE
+        - **Path:** `api/v1/project/delete/:id`
+        - **Authentication:** Required
+        - **Description:**
+          - Deletes a project entry based on the provided project ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 67c1bc71ba0ae3bc8bae72b3
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/project/all:
+    get:
+      tags:
+        - Project Entry > Public
+      summary: '[Project Entry] Get All'
+      description: |
+        ### Endpoint: [Project Entry] Get All
+        - **Method:** GET
+        - **Path:** `api/v1/project/all`
+        - **Authentication:** Not Required
+        - **Description:**
+          - Fetches project details including title, description, and technology stack.
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '296'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '698'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            ETag:
+              schema:
+                type: string
+                example: W/"5e6-5ngbOUP9AEUICNhaAmjBq9qVGoY"
+            Content-Encoding:
+              schema:
+                type: string
+                example: br
+            Date:
+              schema:
+                type: string
+                example: Fri, 28 Feb 2025 14:23:10 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Berhasil
+                data:
+                  - _id: 67c1bc71ba0ae3bc8bae72b3
+                    title: aaa
+                    description:
+                      time: 1740727077181
+                      blocks:
+                        - type: paragraph
+                          data:
+                            text: >-
+                              Hey. Meet the new Editor. On this picture you can
+                              see it in action. Then, try a demo 🤓
+                        - type: header
+                          data:
+                            text: Key features
+                            level: 3
+                        - type: list
+                          data:
+                            type: unordered
+                            items:
+                              - It is a block-style editor
+                              - It returns clean data output in JSON
+                              - >-
+                                Designed to be extendable and pluggable with a
+                                <a
+                                href="https://editorjs.io/creating-a-block-tool">simple
+                                API</a>
+                        - type: header
+                          data:
+                            text: What does it mean «block-styled editor»
+                            level: 3
+                    technology: Next JS, Node JS
+                    createdAt: '2025-02-28T13:38:57.537Z'
+                    updatedAt: '2025-02-28T13:38:57.537Z'
+                    __v: 0
+                  - _id: 67c1c6cb035d9d5dbab42389
+                    title: Tes 2
+                    description:
+                      time: 1740727077181
+                      blocks:
+                        - type: paragraph
+                          data:
+                            text: >-
+                              Hey. Meet the new Editor. On this picture you can
+                              see it in action. Then, try a demo 🤓
+                        - type: header
+                          data:
+                            text: Key features
+                            level: 3
+                        - type: list
+                          data:
+                            type: unordered
+                            items:
+                              - It is a block-style editor
+                              - It returns clean data output in JSON
+                              - >-
+                                Designed to be extendable and pluggable with a
+                                <a
+                                href="https://editorjs.io/creating-a-block-tool">simple
+                                API</a>
+                        - type: header
+                          data:
+                            text: What does it mean «block-styled editor»
+                            level: 3
+                    technology: Next JS, Node JS
+                    createdAt: '2025-02-28T14:23:07.572Z'
+                    updatedAt: '2025-02-28T14:23:07.572Z'
+                    __v: 0
+  /api/v1/project/{id}:
+    get:
+      tags:
+        - Project Entry > Public
+      summary: '[Project Entry] Get By ID'
+      description: |
+        ### Endpoint: [Project Entry] Get By ID
+        - **Method:** GET
+        - **Path:** `api/v1/project/:id`
+        - **Authentication:** Not Required
+        - **Description:**
+          - Fetches project details including title, description, and technology stack.
+      security:
+        - noauthAuth: []
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 67c1bc71ba0ae3bc8bae72b3
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '295'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '693'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '775'
+            ETag:
+              schema:
+                type: string
+                example: W/"307-ZOBSKu7Uk6iroCSNVnxUdBN+/Es"
+            Date:
+              schema:
+                type: string
+                example: Fri, 28 Feb 2025 14:23:15 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Berhasil
+                data:
+                  _id: 67c1bc71ba0ae3bc8bae72b3
+                  title: aaa
+                  description:
+                    time: 1740727077181
+                    blocks:
+                      - type: paragraph
+                        data:
+                          text: >-
+                            Hey. Meet the new Editor. On this picture you can
+                            see it in action. Then, try a demo 🤓
+                      - type: header
+                        data:
+                          text: Key features
+                          level: 3
+                      - type: list
+                        data:
+                          type: unordered
+                          items:
+                            - It is a block-style editor
+                            - It returns clean data output in JSON
+                            - >-
+                              Designed to be extendable and pluggable with a <a
+                              href="https://editorjs.io/creating-a-block-tool">simple
+                              API</a>
+                      - type: header
+                        data:
+                          text: What does it mean «block-styled editor»
+                          level: 3
+                  technology: Next JS, Node JS
+                  createdAt: '2025-02-28T13:38:57.537Z'
+                  updatedAt: '2025-02-28T13:38:57.537Z'
+                  __v: 0
+  /api/v1/certificate/create:
+    post:
+      tags:
+        - Certificate Entry > Private (Need token)
+      summary: '[Certificate Entry] Create new'
+      description: "### Endpoint: [Certificate Entry] Create new\n- **Method:** POST\n- **Path:** `api/v1/certificate/create`\n- **Authentication:** Required\n- **Request Body:**\n  - `{\r\n    \"title\": \"Certification\",\r\n    \"description\" : \"I'm grateful that i met Google Backend developer Certification\",\r\n    \"link\" : \"https://credly.com/id\",\r\n    \"year\" : \"2024\"\r\n}`\n- **Description:**\n  - Creates a new certificate record with title, description, and issuance year.\n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: Certification
+                description: I'm grateful that i met Google Backend developer Certification
+                link: https://credly.com/id
+                year: '2024'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '296'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '806'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '221'
+            ETag:
+              schema:
+                type: string
+                example: W/"dd-KVxuERIdauYJlEu5ei9GiBHlUSw"
+            Date:
+              schema:
+                type: string
+                example: Mon, 03 Mar 2025 14:32:43 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Successfully create sertificate entry
+                data:
+                  title: Certification
+                  description: >-
+                    I'm grateful that i met Google Backend developer
+                    Certification
+                  link: https://credly.com/id
+                  year: 2024
+  /api/v1/certificate/update/{id}:
+    put:
+      tags:
+        - Certificate Entry > Private (Need token)
+      summary: '[Certificate Entry] Update Certificate'
+      description: "### Endpoint: [Certificate Entry] Update Certificate\n- **Method:** PUT\n- **Path:** `api/v1/certificate/update/:id`\n- **Authentication:** Required\n- **Request Body:**\n  - `{\r\n    \"title\": \"New Certificate\",\r\n    \"description\": \"Revisi\"\r\n}`\n- **Description:**\n  - Updates an existing certificate entry.\n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: New Certificate
+                description: Revisi
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 67c5bfdebc69375c2e4e0ece
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '297'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '849'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '280'
+            ETag:
+              schema:
+                type: string
+                example: W/"118-YagTWlV4fpFGTy1O1X3hRvjgJsU"
+            Date:
+              schema:
+                type: string
+                example: Mon, 03 Mar 2025 15:11:50 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Successfully update certificate
+                data:
+                  _id: 67c5bfdebc69375c2e4e0ece
+                  title: New Certificate
+                  description: Revisi
+                  link: https://credly.com/id
+                  year: 2024
+                  createdAt: '2025-03-03T14:42:38.751Z'
+                  updatedAt: '2025-03-03T15:11:50.458Z'
+                  __v: 0
+  /api/v1/certificate/delete/{id}:
+    delete:
+      tags:
+        - Certificate Entry > Private (Need token)
+      summary: '[Certificate Entry] Delete Certificate'
+      description: |
+        ### Endpoint: [Certificate Entry] Delete Certificate
+        - **Method:** DELETE
+        - **Path:** `api/v1/certificate/delete/:id`
+        - **Authentication:** Required
+        - **Description:**
+          - Deletes a certificate record.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 67c70fd50b74c64c54d47e23
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '294'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '781'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '60'
+            ETag:
+              schema:
+                type: string
+                example: W/"3c-oTF3uDarvGWpwgoAWXTN8vt5N2s"
+            Date:
+              schema:
+                type: string
+                example: Tue, 04 Mar 2025 14:37:47 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Successfully Delete Certificate
+  /api/v1/certificate/all:
+    get:
+      tags:
+        - Certificate Entry > Public
+      summary: '[Certificate Entry] Get All'
+      description: |
+        ### Endpoint: [Certificate Entry] Get All
+        - **Method:** GET
+        - **Path:** `api/v1/certificate/all`
+        - **Authentication:** Not Required
+        - **Description:**
+          - Retrieves details of a stored certificate.
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '296'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '803'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '337'
+            ETag:
+              schema:
+                type: string
+                example: W/"151-yMcD/FjyG+ORfFdAWlu9M6dWP5g"
+            Date:
+              schema:
+                type: string
+                example: Tue, 04 Mar 2025 14:37:25 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Successfully Get All Certificate
+                data:
+                  - _id: 67c70fd50b74c64c54d47e23
+                    title: Certification
+                    description: >-
+                      I'm grateful that i met Google Backend developer
+                      Certification
+                    link: https://credly.com/id
+                    year: 2024
+                    createdAt: '2025-03-04T14:36:05.940Z'
+                    updatedAt: '2025-03-04T14:36:05.940Z'
+                    __v: 0
+  /api/v1/certificate/{id}:
+    get:
+      tags:
+        - Certificate Entry > Public
+      summary: '[Certificate Entry] Get By Id'
+      description: |
+        ### Endpoint: [Certificate Entry] Get By Id
+        - **Method:** GET
+        - **Path:** `api/v1/certificate/:id`
+        - **Authentication:** Not Required
+        - **Description:**
+          - Retrieves details of a stored certificate.
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 67c70fd50b74c64c54d47e23
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '295'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '794'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '331'
+            ETag:
+              schema:
+                type: string
+                example: W/"14b-iBzAOJDBNTQs+jl0RG7rwJ3On18"
+            Date:
+              schema:
+                type: string
+                example: Tue, 04 Mar 2025 14:37:34 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Successfully Get Certificate
+                data:
+                  _id: 67c70fd50b74c64c54d47e23
+                  title: Certification
+                  description: >-
+                    I'm grateful that i met Google Backend developer
+                    Certification
+                  link: https://credly.com/id
+                  year: 2024
+                  createdAt: '2025-03-04T14:36:05.940Z'
+                  updatedAt: '2025-03-04T14:36:05.940Z'
+                  __v: 0
+  /api/v1/experience/create:
+    post:
+      tags:
+        - Experience Entry > Private (Need token)
+      summary: '[Experience Entry] Create new'
+      description: "### Endpoint: [Experience Entry] Create new\n- **Method:** POST\n- **Path:** `api/v1/experience/create`\n- **Authentication:** Required\n- **Request Body:**\n  - `{\r\n    \"entity\" : \"PT Mabar Yok\",\r\n    \"position\": \"Fulltime Manager\",\r\n    \"type\" : \"job\",\r\n    \"description\": \"- Point 1 \\n - Point 2\",\r\n    \"startDate\" : \"2025-04-07\",\r\n    \"endDate\" : \"2025-06-09\"\r\n}`\n- **Description:**\n  - General API endpoint.\n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                entity: PT Mabar Yok
+                position: Fulltime Manager
+                type: job
+                description: |-
+                  - Point 1 
+                   - Point 2
+                startDate: '2025-04-07'
+                endDate: '2025-06-09'
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '299'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '900'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '389'
+            ETag:
+              schema:
+                type: string
+                example: W/"185-z/U+BS+VbgeG2EFNMFBcKUcpHWA"
+            Date:
+              schema:
+                type: string
+                example: Tue, 04 Mar 2025 14:26:46 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Successfully create experience entry
+                data:
+                  entity: PT Produktif Yok
+                  position: Fullstack Developer Intern
+                  type: job
+                  description: |-
+                    - Point 1 
+                     - Point 2
+                  startDate: '2025-04-07T00:00:00.000Z'
+                  endDate: '2025-06-09T00:00:00.000Z'
+                  _id: 67c70da6fec9a45d59ddfd5d
+                  createdAt: '2025-03-04T14:26:46.217Z'
+                  updatedAt: '2025-03-04T14:26:46.217Z'
+                  __v: 0
+  /api/v1/experience/update/{id}:
+    put:
+      tags:
+        - Experience Entry > Private (Need token)
+      summary: '[Experience Entry] Update Experience'
+      description: "### Endpoint: [Experience Entry] Update Experience\n- **Method:** PUT\n- **Path:** `api/v1/experience/update/:id`\n- **Authentication:** Required\n- **Request Body:**\n  - `{\r\n    \"entity\": \"PT ini hasil revisi\",\r\n    \"description\": \"Revisi\"\r\n}`\n- **Description:**\n  - General API endpoint.\n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                entity: PT ini hasil revisi
+                description: Revisi
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 67c70da6fec9a45d59ddfd5d
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '298'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '887'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '370'
+            ETag:
+              schema:
+                type: string
+                example: W/"172-Yv6/6YCv7lN/ACdMJ98F58hk4S4"
+            Date:
+              schema:
+                type: string
+                example: Tue, 04 Mar 2025 14:33:05 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Successfully update experience
+                data:
+                  _id: 67c70da6fec9a45d59ddfd5d
+                  entity: PT ini hasil revisi
+                  position: Fullstack Developer Intern
+                  type: job
+                  description: Revisi
+                  startDate: '2025-04-07T00:00:00.000Z'
+                  endDate: '2025-06-09T00:00:00.000Z'
+                  createdAt: '2025-03-04T14:26:46.217Z'
+                  updatedAt: '2025-03-04T14:33:05.774Z'
+                  __v: 0
+  /api/v1/experience/delete/{id}:
+    delete:
+      tags:
+        - Experience Entry > Private (Need token)
+      summary: '[Experience Entry] Delete Experience'
+      description: |
+        ### Endpoint: [Experience Entry] Delete Experience
+        - **Method:** DELETE
+        - **Path:** `api/v1/experience/delete/:id`
+        - **Authentication:** Required
+        - **Description:**
+          - General API endpoint.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 67c70da6fec9a45d59ddfd5d
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '299'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '900'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '59'
+            ETag:
+              schema:
+                type: string
+                example: W/"3b-KJAZVFQpz9m4aVsK4qX7auOK2xA"
+            Date:
+              schema:
+                type: string
+                example: Tue, 04 Mar 2025 14:33:59 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Successfully Delete experience
+  /api/v1/experience/all:
+    get:
+      tags:
+        - Experience Entry > Public
+      summary: '[Experience Entry] Get All'
+      description: |
+        ### Endpoint: [Experience Entry] Get All
+        - **Method:** GET
+        - **Path:** `api/v1/experience/all`
+        - **Authentication:** Not Required
+        - **Description:**
+          - General API endpoint.
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '298'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '821'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '386'
+            ETag:
+              schema:
+                type: string
+                example: W/"182-e9aVhnLZHQ+0RBO+aw9erKOtXdc"
+            Date:
+              schema:
+                type: string
+                example: Tue, 04 Mar 2025 14:30:44 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Successfully Get All experience
+                data:
+                  - _id: 67c70da6fec9a45d59ddfd5d
+                    entity: PT Produktif Yok
+                    position: Fullstack Developer Intern
+                    type: job
+                    description: |-
+                      - Point 1 
+                       - Point 2
+                    startDate: '2025-04-07T00:00:00.000Z'
+                    endDate: '2025-06-09T00:00:00.000Z'
+                    createdAt: '2025-03-04T14:26:46.217Z'
+                    updatedAt: '2025-03-04T14:26:46.217Z'
+                    __v: 0
+  /api/v1/experience/{id}:
+    get:
+      tags:
+        - Experience Entry > Public
+      summary: '[Experience Entry] Get By Id'
+      description: |
+        ### Endpoint: [Experience Entry] Get By Id
+        - **Method:** GET
+        - **Path:** `api/v1/experience/:id`
+        - **Authentication:** Not Required
+        - **Description:**
+          - General API endpoint.
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 67c70da6fec9a45d59ddfd5d
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '297'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '796'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '380'
+            ETag:
+              schema:
+                type: string
+                example: W/"17c-XYdQ9jvKVk9SrBsHuGYzVi37k9Q"
+            Date:
+              schema:
+                type: string
+                example: Tue, 04 Mar 2025 14:31:09 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Successfully Get experience
+                data:
+                  _id: 67c70da6fec9a45d59ddfd5d
+                  entity: PT Produktif Yok
+                  position: Fullstack Developer Intern
+                  type: job
+                  description: |-
+                    - Point 1 
+                     - Point 2
+                  startDate: '2025-04-07T00:00:00.000Z'
+                  endDate: '2025-06-09T00:00:00.000Z'
+                  createdAt: '2025-03-04T14:26:46.217Z'
+                  updatedAt: '2025-03-04T14:26:46.217Z'
+                  __v: 0
+  /api/v1/file/upload:
+    post:
+      tags:
+        - File or Image Endpoint
+      summary: '[File] Upload'
+      description: |
+        ### Endpoint: [File] Upload
+        - **Method:** POST
+        - **Path:** `api/v1/file/upload`
+        - **Authentication:** Not Required
+        - **Request Body:**
+          - `cv_file` (file): No description
+          - `profile_image` (file): No description
+        - **Description:**
+          - General API endpoint.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                cv_file:
+                  type: string
+                  format: binary
+                profile_image:
+                  type: string
+                  format: binary
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '299'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '900'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '159'
+            ETag:
+              schema:
+                type: string
+                example: W/"9f-L2VdwtfJvIODQUTVs9qODl0j1Jc"
+            Date:
+              schema:
+                type: string
+                example: Tue, 18 Mar 2025 11:24:32 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: File Uploaded
+                fileOrImagePath:
+                  cv_file: >-
+                    /assets/upload_by_user/cv_file/1742297072242e93fec5c-b519-4eb9-a782-4bd5e66b01e2.pdf
+  /api/v1/visitor:
+    post:
+      tags:
+        - default
+      summary: '[Public] Track Visitor'
+      description: |
+        ### Endpoint: [Public] Track Visitor
+        - **Method:** POST
+        - **Path:** `api/v1/visitor`
+        - **Authentication:** Not Required
+        - **Description:**
+          - General API endpoint.
+      requestBody:
+        content: {}
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/auth/login:
+    post:
+      tags:
+        - default
+      summary: '[Auth] Login'
+      description: "### Endpoint: [Auth] Login\n- **Method:** POST\n- **Path:** `api/v1/auth/login`\n- **Authentication:** Not Required\n- **Request Body:**\n  - `{\r\n    \"username\" : \"{{username}}\",\r\n    \"password\" : \"{{password}}\"\r\n}`\n- **Description:**\n  - General API endpoint.\n"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                username: '{{username}}'
+                password: '{{password}}'
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '226'
+            ETag:
+              schema:
+                type: string
+                example: W/"e2-5DfeCuwaks5IaeI5uIzsUuGlFNk"
+            Date:
+              schema:
+                type: string
+                example: Thu, 27 Feb 2025 07:53:21 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Berhasil Login
+                token: >-
+                  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpaWQiOiI2N2JiYmY5NjcyODJmZGE3ZmRkYmFmZDIiLCJpYXQiOjE3NDA2NDI4MDEsImV4cCI6MTc0MDY1MDAwMX0.wDIbJFPpfW8FQTjS7XiRKoDPPIZbYm56OCD1RPnumk0
+  /api/v1/auth/logout:
+    post:
+      tags:
+        - default
+      summary: '[Auth] Logout'
+      description: |
+        ### Endpoint: [Auth] Logout
+        - **Method:** POST
+        - **Path:** `api/v1/auth/logout`
+        - **Authentication:** Not Required
+        - **Description:**
+          - General API endpoint.
+      requestBody:
+        content: {}
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              schema:
+                type: string
+                example: Express
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '43'
+            ETag:
+              schema:
+                type: string
+                example: W/"2b-N3W8w6IdMA7HcuLYKfLCuJgmVbk"
+            Date:
+              schema:
+                type: string
+                example: Tue, 11 Feb 2025 07:46:40 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                status: true
+                message: Berhasil Logout

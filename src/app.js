@@ -10,13 +10,15 @@ const timeout = require("connect-timeout");
 const { limiters } = require("@middleware/rateLimiter");
 const errorHandler = require("./middleware/errorHandler");
 const cookieparser = require("cookie-parser");
+const path = require("path");
+const swaggerUiDist = require("swagger-ui-dist");
 
 app.use(timeout("15s", { respond: true }));
 app.use(bparser.urlencoded({ extended: true }));
 app.use(bparser.json());
 app.use(cookieparser());
-app.use(helmet());
 app.use(compression());
+app.use(helmet());
 
 //CORS CONFIGURATION
 const mainOrigin = `${config.appUrl}:${config.port}`;
@@ -44,6 +46,21 @@ app.options("*", cors());
 
 // Apply global rate limiter to all requests
 app.use(limiters.global);
+
+// Swagger docs
+app.use("/swagger-ui", express.static(swaggerUiDist.getAbsoluteFSPath()));
+app.use(
+  "/apidoc",
+  express.static(path.join(__dirname, "../docs/swagger/swagger_config.yml"))
+);
+app.use(
+  "/swaggerjs",
+  express.static(path.join(__dirname, "../docs/swagger/swagger_script.js"))
+);
+app.get("/swagger", (req, res) => {
+  res.sendFile(path.join(__dirname, "../docs/swagger/swagger.html"));
+});
+app.use(express.static("public"));
 
 //Entry Point Semua Route
 const route = require("./routes/route");

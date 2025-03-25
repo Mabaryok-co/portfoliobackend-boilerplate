@@ -20,7 +20,6 @@ const userSchema = joi.object({
       link: joi.string().uri().required(),
     })
   ),
-  contact: joi.string().required(),
   image: joi.string().uri().required(),
   cv: joi.object({
     url: joi.string().uri(),

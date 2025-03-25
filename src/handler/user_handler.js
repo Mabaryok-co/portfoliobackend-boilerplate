@@ -7,19 +7,9 @@ const JoiValidator = require("@validator/JoiValidator");
 const userSchema = require("@validator/schema/userSchema");
 
 exports.getProfile = async function (req, res) {
-  if (!req.userSession) throw new AppError("User Tidak Ditemukan");
-  res.status(200).send({
-    success: true,
-    message: "Berhasil Ambil User",
-    data: req.userSession,
-  });
-};
-
-exports.getProfilePublic = async function (req, res) {
   //Karena ini website cuman satu user. Jadi langsung ambil aja
   const user = await UserModel.find().select([
     "-password",
-    "-_id",
     "-username",
     "-__v",
     "-createdAt",
@@ -35,7 +25,7 @@ exports.getProfilePublic = async function (req, res) {
 exports.updateProfile = async function (req, res) {
   if (req.body.username || req.body.password) {
     //Jika ada kesalahan, maka hapus file yang sudah di upload multer
-    await fileHandler.deleteUploadedFiles(req.files);
+    await fileHandler.deleteUploadedReqFiles(req.files);
     throw AppError(
       "Endpoint ini tidak bisa digunakan untuk mengubah username dan password"
     );
@@ -45,19 +35,23 @@ exports.updateProfile = async function (req, res) {
   // Validate only the fields that are being updated
   const data = JoiValidator(userSchema, req.body, { pick: fieldsToUpdate });
 
-  //Jika user mengupdate Image atau CV. Maka hapus file yang sudah ada sebelumnya
+  //Jika user mengupdate Profile Image atau CV. Maka hapus file yang sudah ada sebelumnya
   if (req.files && Object.keys(req.files).length > 0) {
-    if (Array.isArray(req.files.image) && req.files.image.length > 0) {
-      data.image =
-        "public/assets/upload_by_user/image/" + req.files.image[0].filename;
-      await fileHandler.deleteFile(req.userSession.user.image);
+    if (
+      Array.isArray(req.files.profile_image) &&
+      req.files.profile_image.length > 0
+    ) {
+      data.profile_image =
+        "public/assets/upload_by_user/profile_image/" +
+        req.files.profile_image[0].filename;
+      await fileHandler.deleteFileUploadedByUser(req.userSession.user.image);
     }
 
-    if (Array.isArray(req.files.cv) && req.files.cv.length > 0) {
+    if (Array.isArray(req.files.cv_file) && req.files.cv.length > 0) {
       data.cv = {
         url: "public/assets/upload_by_user/cv/" + req.files.cv[0].filename,
       };
-      await fileHandler.deleteFile(req.userSession.user.cv.url);
+      await fileHandler.deleteFileUploadedByUser(req.userSession.user.cv.url);
     }
   }
 

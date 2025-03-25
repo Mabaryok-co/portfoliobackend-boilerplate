@@ -10,19 +10,11 @@ const privateRoute = express.Router();
 const publicRoute = express.Router();
 
 router.use("", publicRoute);
-publicRoute.get("/profile/public", tryCatch(userHandler.getProfilePublic));
+publicRoute.get("/profile", tryCatch(userHandler.getProfile));
 publicRoute.get("/download/cv", tryCatch(userHandler.downloadCV));
 
 router.use("", verifyToken, privateRoute);
-privateRoute.patch(
-  "/profile/update",
-  upload.fields([
-    { name: "image", maxCount: 1 },
-    { name: "cv", maxCount: 1 },
-  ]),
-  tryCatch(userHandler.updateProfile)
-);
-privateRoute.get("/profile", tryCatch(userHandler.getProfile));
+privateRoute.put("/profile", tryCatch(userHandler.updateProfile)); //Add Multer Upload File Image & CV
 privateRoute.patch(
   "/profile/account/update",
   bodyNotEmpty,
