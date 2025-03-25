@@ -60,7 +60,21 @@ app.use(
 app.get("/swagger", (req, res) => {
   res.sendFile(path.join(__dirname, "../docs/swagger/swagger.html"));
 });
-app.use(express.static("public"));
+
+app.use(
+  "public/assets",
+  express.static(path.join(__dirname, "../public/assets/default_by_app"))
+);
+const allowedFolders = ["cv_file", "profile_image", "project_image"];
+// Only serve folder that allowed. This folder includes file uploaded by user
+allowedFolders.forEach((folder) => {
+  app.use(
+    `/public/document/${folder}`,
+    express.static(
+      path.join(__dirname, "../public/assets/upload_by_user", folder)
+    )
+  );
+});
 
 //Entry Point Semua Route
 const route = require("./routes/route");
