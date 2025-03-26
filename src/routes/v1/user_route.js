@@ -9,13 +9,13 @@ const { bodyNotEmpty } = require("@validator/body");
 const privateRoute = express.Router();
 const publicRoute = express.Router();
 
+router.use("", publicRoute);
+publicRoute.get("/cv", tryCatch(userHandler.downloadCV));
+publicRoute.get("", tryCatch(userHandler.getProfile));
+
 router.use("", verifyToken, privateRoute);
 privateRoute.get("/account", tryCatch(userHandler.getAccountDetails));
 privateRoute.put("/account", bodyNotEmpty, tryCatch(userHandler.updateAccount));
 privateRoute.put("", tryCatch(userHandler.updateProfile));
-
-router.use("", publicRoute);
-publicRoute.get("/cv", tryCatch(userHandler.downloadCV));
-publicRoute.get("", tryCatch(userHandler.getProfile));
 
 module.exports = router;
