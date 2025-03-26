@@ -151,7 +151,7 @@ exports.AIcompletion = async (req, res) => {
       created: messageResponse.created,
       message: [
         { role: "user", content: messages },
-        messageResponse.choices[0].message,
+        messageResponse.choices.message,
       ],
       ...messageResponse.usage,
     },
