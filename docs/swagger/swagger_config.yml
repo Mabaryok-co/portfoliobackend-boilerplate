@@ -14,7 +14,7 @@ info:
     provide a set of **APIs** for frontend applications built by the community.
   version: 1.0.0
 servers:
-  - url: http://localhost:3000
+  - url: http://{{url}}
 components:
   securitySchemes:
     noauthAuth:
@@ -72,37 +72,51 @@ tags:
   - name: File or Image Endpoint
     description: Separated file or image endpoint for easy and better handling
 paths:
-  /api/v1/user/download/cv:
-    get:
-      tags:
-        - Profile > Public
-      summary: '[Profile] Download CV'
-      description: |
-        ### Endpoint: [Profile] Download CV
-        - **Method:** GET
-        - **Path:** `api/v1/user/download/cv`
-        - **Authentication:** Not Required
-        - **Description:**
-          - General API endpoint.
-      security:
-        - noauthAuth: []
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-  /api/v1/user/profile:
+  /api/v1/user:
     get:
       tags:
         - Profile > Public
       summary: '[Profile] Get Profile'
-      description: |
-        ### Endpoint: [Profile] Get Profile
-        - **Method:** GET
-        - **Path:** `api/v1/user/profile`
-        - **Authentication:** Not Required
-        - **Description:**
-          - Retrieves user profile information including name, bio, and social links.
+      description: >-
+        StartFragment
+
+
+        ### **Endpoint: \[Profile\] Get Profile**
+
+
+        **Method:** GET  
+
+        **Path:** `api/v1/user`  
+
+        **Authentication:** Not Required
+
+
+        ### **Description:**
+
+
+        This endpoint retrieves **public user profile information**, including:
+
+
+        - **Name**
+            
+        - **Bio**
+            
+        - **Social links**
+            
+        - **Profile Images**
+            
+
+        ### **Important Notes:**
+
+
+        - Since authentication is **not required**, this endpoint returns **only
+        publicly available profile information**.
+            
+        - If the user profile does not exist, the server will return an
+        appropriate error response (e.g., **404 Not Found**).
+            
+        - This endpoint **does not include sensitive data** such as username,
+        and password
       security:
         - noauthAuth: []
       responses:
@@ -233,45 +247,173 @@ paths:
       tags:
         - Profile > Private (Need Token)
       summary: '[Profile] Update Profile'
-      description: |
-        ### Endpoint: [Profile] Update Profile
-        - **Method:** PUT
-        - **Path:** `api/v1/user/profile`
-        - **Authentication:** Required
-        - **Request Body:**
-          - `name` (text): No description
-          - `bio` (text): No description
-          - `social` (text): No description
-        - **Description:**
-          - Updates user profile data such as name, bio, and contact information.
+      description: >-
+        StartFragment
+
+
+        ### **Endpoint: \[Profile\] Update Profile**
+
+
+        **Method:** PUT  
+
+        **Path:** `api/v1/user/profile`  
+
+        **Authentication:** Required
+
+
+        ### **Description:**
+
+
+        This endpoint allows users to update their **profile information**,
+        including:
+
+
+        - **Name** (Full Name)
+            
+        - **Bio** (Description about the user)
+            
+        - **Social Links** (A list of social media accounts)
+            
+
+        Users can update **any single field** or **multiple fields** in one
+        request.
+
+
+        ### **Request Body:**
+
+
+        ``` json
+
+        {
+          "name": "John Doe",
+          "bio": "Software Engineer | Open Source Enthusiast",
+          "social": [
+            {
+              "app_name": "Twitter",
+              "link": "https://twitter.com/johndoe"
+            }
+          ]
+        }
+
+         ```
+
+        ### **Important Notes:**
+
+
+        - **Partial updates are allowed.** You can send **only one field**
+        (e.g., just `name` or just `bio`).
+            
+        - **If a field is not included in the request, it remains unchanged.**
+            
+        - **The** **`social`** **array must contain valid objects** with
+        `app_name` (platform name) and `link` (profile URL).
+            
+        - **To update profile image or CV**, refer to the [file upload
+        endpoint](https://go.postman.co/workspace/e673e172-c878-4d61-9366-0a961dd8cade/documentation/26853080-5a6330d2-088a-4e18-bf50-52335f6ab02b?entity=request-012762ce-0d3b-4032-b086-3dd6ba4ae1fc)
+        **(**`api/v1/file/upload`**)**.
+            
+        - **To update username or password**, use the [update account
+        endpoint](https://go.postman.co/workspace/e673e172-c878-4d61-9366-0a961dd8cade/documentation/26853080-5a6330d2-088a-4e18-bf50-52335f6ab02b?entity=request-b5b68da4-55da-445d-ae6f-de12af221e43)
+        **(**`api/v1/user/profile/account`**)**.
+            
+        - If an invalid request is sent (e.g., missing required fields in
+        `social`), the server will return a **400 Bad Request** response.
       requestBody:
         content:
-          multipart/form-data:
+          application/json:
             schema:
               type: object
-              properties:
-                name:
-                  type: string
-                  example: Lintang A.
-                bio:
-                  type: string
-                  example: This is revised bio
+              example:
+                name: Name Revised
+                bio: Bio Revised
                 social:
-                  type: string
-                  example: >-
-                    [{"app_name": "Github", "link":
-                    "https://github.com/johndoe"}, {"app_name": "LinkedIn",
-                    "link": "https://linkedin.com/johndoe"}]
+                  - app_name: Github
+                    link: https://github.com/johndoe
+                  - app_name: LinkedIn
+                    link: https://linkedin.com/johndoe
       security:
         - bearerAuth: []
       responses:
         '200':
           description: OK
           headers:
-            X-Powered-By:
+            Content-Security-Policy:
               schema:
                 type: string
-                example: Express
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 1000;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '1000'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '999'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '900'
             Content-Type:
               schema:
                 type: string
@@ -279,15 +421,15 @@ paths:
             Content-Length:
               schema:
                 type: integer
-                example: '638'
+                example: '603'
             ETag:
               schema:
                 type: string
-                example: W/"27e-2VSST7yZHyfZqWau0DNaH6ADY7E"
+                example: W/"25b-f/UAHC2H0zdP4/3F8CKU6E7SWz4"
             Date:
               schema:
                 type: string
-                example: Tue, 11 Feb 2025 07:39:30 GMT
+                example: Tue, 25 Mar 2025 19:16:52 GMT
             Connection:
               schema:
                 type: string
@@ -304,23 +446,23 @@ paths:
                 success: true
                 message: Profil Berhasil Diubah
                 data:
-                  cv:
-                    download: 0
-                    url: >-
-                      public/assets/upload_by_user/cv/1739259570214e388a909-fe1b-40c0-8587-bba7891aa610-cv-Revisiasdadsad.pdf
-                  _id: 67a9e3183d5dc1f063e1ca3f
-                  username: lintangaja4
-                  name: Revisi asdadsad
-                  bio: Bio hasil revisi
-                  contact: '126317263728163'
-                  image: >-
-                    public/assets/upload_by_user/image/1739259570211cfee19f9-07b1-4eeb-8ec7-2658d5669414-image-Revisiasdadsad.jpg
+                  cv_file:
+                    url: 174292550134947734fdd-1c29-47f0-9211-9b5d88376e40.pdf
+                    download: 3
+                  _id: 67e2d7b3afcf2a5f6b26d6c4
+                  username: username
+                  name: Name Revised
+                  bio: Bio Revised
+                  profile_image: 1742925501351d56e25c8-5788-4cd8-b840-f92ff384db8d.jpeg
                   social:
-                    - app_name: tesRevisi
+                    - app_name: Github
                       link: https://github.com/johndoe
-                      _id: 67aafeb213d40ff406377d99
-                  createdAt: '2025-02-10T11:29:28.842Z'
-                  updatedAt: '2025-02-11T07:39:30.373Z'
+                      _id: 67e30124286755e1c157758c
+                    - app_name: LinkedIn
+                      link: https://linkedin.com/johndoe
+                      _id: 67e30124286755e1c157758d
+                  createdAt: '2025-03-25T16:20:03.592Z'
+                  updatedAt: '2025-03-25T19:16:52.176Z'
                   __v: 0
         '400':
           description: Bad Request
@@ -362,12 +504,265 @@ paths:
                 message: >-
                   Endpoint ini tidak bisa digunakan untuk mengubah username dan
                   password
-  /api/v1/user/profile/account:
+  /api/v1/user/cv:
+    get:
+      tags:
+        - Profile > Public
+      summary: '[Profile] Download CV'
+      description: >-
+        ### **Endpoint: \[Profile\] Download CV**
+
+
+        **Method:** GET  
+
+        **Path:** `api/v1/user/cv`  
+
+        **Authentication:** Not Required
+
+
+        ### **Description:**
+
+
+        This endpoint allows download a CV file automatically when accessed.
+
+
+        ### **Behavior:**
+
+
+        - When a request is made, the CV file will be **immediately downloaded**
+        without requiring further interaction.
+            
+        - The system will **automatically update the download count**, tracking
+        how many times the CV has been downloaded.
+            
+
+        ### **Important Notes:**
+
+
+        - Since authentication is **not required**, anyone can access and
+        download the CV.
+            
+        - The response will include the file as an attachment, triggering an
+        automatic download in most browsers.
+            
+        - If the CV file is not available, the endpoint will return an
+        appropriate error response
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/user/account:
+    get:
+      tags:
+        - Profile > Private (Need Token)
+      summary: '[Profile] Get User Account'
+      description: >-
+        ### **Endpoint: \[Profile\] Get User Account**
+
+
+        **Method:** GET  
+
+        **Path:** `api/v1/user/account`  
+
+        **Authentication:** Required
+
+
+        ### **Description:**
+
+
+        This endpoint retrieves **user account information**, including:
+        **Username**
+
+
+        This endpoint provides necessary account data for users who want to
+        update their profile using the [Update Profile
+        Endpoint](https://go.postman.co/workspace/e673e172-c878-4d61-9366-0a961dd8cade/documentation/26853080-5a6330d2-088a-4e18-bf50-52335f6ab02b?entity=request-b5b68da4-55da-445d-ae6f-de12af221e43)
+        (`PUT api/v1/user/account`).
+
+
+        ### **Important Notes:**
+
+
+        - **Authentication is required** to access this endpoint. Only the
+        authenticated user can retrieve their own account information.
+            
+        - This endpoint **does not return sensitive details** such as passwords
+        or authentication tokens.
+            
+        - If the user account is not found, the server will return a **404 Not
+        Found** response.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 1000;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '1000'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '999'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '900'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '98'
+            ETag:
+              schema:
+                type: string
+                example: W/"62-794ZdarZsBx5pW+wp+vkgPYd8TE"
+            Date:
+              schema:
+                type: string
+                example: Tue, 25 Mar 2025 19:06:22 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                success: true
+                message: Successfully get username from user
+                data:
+                  username: username
     put:
       tags:
         - Profile > Private (Need Token)
       summary: '[Profile] Update Account Settings'
-      description: "### Endpoint: [Profile] Update Account Settings\n- **Method:** PUT\n- **Path:** `api/v1/user/profile/account`\n- **Authentication:** Required\n- **Request Body:**\n  - `{\r\n    \"username\": \"newUsername\",\r\n    \"password\": \"passwordTes\"\r\n}`\n- **Description:**\n  - Updates user profile data such as name, bio, and contact information.\n"
+      description: >-
+        StartFragment
+
+
+        ### **Endpoint: \[Account\] Update Account Settings**
+
+
+        **Method:** PUT  
+
+        **Path:** `api/v1/user/profile/account`  
+
+        **Authentication:** Required
+
+
+        ### **Description:**
+
+
+        This endpoint allows users to update their **account settings**,
+        including:
+
+
+        - **Username**
+            
+        - **Password**
+            
+
+        You can update only the `username`, or only the `password` field.
+
+
+        ### **Request Body:**
+
+
+        ```
+
+        {
+          "username": "newUsername",
+          "password": "newPassword"
+        }
+
+         ```
+
+        ### **Important Notes:**
+
+
+        - **Authentication is required** to update account details. Only the
+        authenticated user can modify their own account.
+            
+        - If the request is invalid, a **400 Bad Request** response will be
+        returned.
       requestBody:
         content:
           application/json:
@@ -441,7 +836,76 @@ paths:
       tags:
         - AI (Need Token)
       summary: '[AI] Enhance Writing (SSE)'
-      description: "### Endpoint: [AI] Enhance Writing (SSE)\n- **Method:** POST\n- **Path:** `api/v1/ai/completion/enhancewriting/sse`\n- **Authentication:** Not Required\n- **Request Body:**\n  - `{\r\n    \"messages\" : \"**PART**: bio. **TEXT**: I do digital marketing. I run ads, manage social media, and analyze data. I try to help businesses grow online.\"\r\n}`\n- **Description:**\n  - Enhances text using AI by providing structured input for improvement.\n"
+      description: >-
+        StartFragment
+
+
+        ### **Endpoint: \[AI\] Enhance Writing (SSE)**
+
+
+        **Method:** POST  
+
+        **Path:** `api/v1/ai/completion/enhancewriting/sse`  
+
+        **Authentication:** Required
+
+
+        ### **Description:**
+
+
+        This endpoint enhances user-written text using AI, providing a **more
+        polished, structured, and professional output**.
+
+
+        It is designed for improving various content sections such as **bio
+        descriptions, work experience summaries, and project details**.
+
+
+        AI-generated enhancements are **streamed in real-time** using
+        **Server-Sent Events (SSE)**, allowing the frontend to display
+        improvements progressively.
+
+
+        ### **Request Body:**
+
+
+        ```
+
+        {
+          "messages": "**PART**: bio. **TEXT**: I do digital marketing. I run ads, manage social media, and analyze data. I try to help businesses grow online."
+        }
+
+         ```
+
+        #### **Request Parameters:**
+
+
+        - `**PART**`: The **section** being enhanced (**bio**, **experience**,
+        **project**, etc.).
+            
+        - `**TEXT**`: The **raw user input** that needs improvement.
+            
+        - **The** **`PART`** **parameter is mandatory and must be wrapped with
+        double asterisks (****`**`****).**
+            
+
+        ### **Usage Notes:**
+
+
+        ✅ **Frontend must listen to SSE events** to receive the enhanced text
+        progressively.  
+
+        ✅ **Supports real-time streaming for a smoother user experience.**  
+
+        ✅ **Improves text clarity, professionalism, and structure.**  
+
+        ✅ **Works for anither sections like** **`bio`****,** **`experience`****,
+        etc.**
+
+
+        ❌ **Does not accept multiple texts and section in one request.**  
+
+        ❌ **Not for grammar-checking; focuses on enhancement and readability.**
       requestBody:
         content:
           application/json:
@@ -670,7 +1134,58 @@ paths:
       tags:
         - AI (Need Token)
       summary: '[AI] Enhance Writing'
-      description: "### Endpoint: [AI] Enhance Writing\n- **Method:** POST\n- **Path:** `api/v1/ai/completion/enhancewriting`\n- **Authentication:** Not Required\n- **Request Body:**\n  - `{\r\n    \"messages\" : \"**PART**: experience. **TEXT**: • Managed projects and made sure they were finished on time. • Talked with the team and clients about project progress. • Solved problems when issues happened in the project. • Used some tools to organize tasks.\"\r\n}`\n- **Description:**\n  - Enhances text using AI by providing structured input for improvement.\n"
+      description: >-
+        StartFragment
+
+
+        ### **Endpoint: \[AI\] Enhance Writing**
+
+
+        **Method:** POST  
+
+        **Path:** `api/v1/ai/completion/enhancewriting`  
+
+        **Authentication:** Not Required
+
+
+        ### **Description:**
+
+
+        This endpoint is the same as before to enhances user-written text by
+        improving **clarity, professionalism, and readability** using AI.
+
+
+        **Unlike the SSE version, this endpoint follows a basic request-response
+        format, meaning the frontend will receive the full enhanced text in a
+        single response.**
+
+
+        ⚠️⚠️ **Processing may take 4+ seconds**, as backend needs to gather all
+        the text-chunk from the AI Models. It is recommended to use the SSE
+        Version, more seamless and better experience
+
+
+        ### **Request Body:**
+
+
+        ```
+
+        {
+          "messages": "**PART**: experience. **TEXT**: • Managed projects and made sure they were finished on time. • Talked with the team and clients about project progress. • Solved problems when issues happened in the project. • Used some tools to organize tasks."
+        }
+
+         ```
+
+        #### **Request Parameters:**
+
+
+        - `**PART**`: The **content category** being enhanced (**bio**,
+        **experience**, **project**, etc.).
+            
+        - `**TEXT**`: The **raw user input** that needs improvement.
+            
+        - **The** **`PART`** **parameter is mandatory and must be wrapped with
+        double asterisks (****`**`****).**
       requestBody:
         content:
           application/json:
@@ -827,7 +1342,53 @@ paths:
       tags:
         - Project Entry > Private (Need Token)
       summary: '[Project Entry] Create Project'
-      description: "### Endpoint: [Project Entry] Create Project\n- **Method:** POST\n- **Path:** `api/v1/project/create`\n- **Authentication:** Required\n- **Request Body:**\n  - `{\r\n  \"title\": \"Tes 2\",\r\n  \"description\": {\r\n    \"time\": 1740727077181,\r\n    \"blocks\": [\r\n      {\r\n        \"id\": \"mhTl6ghSkV\",\r\n        \"type\": \"paragraph\",\r\n        \"data\": {\r\n          \"text\": \"Hey. Meet the new Editor. On this picture you can see it in action. Then, try a demo 🤓\"\r\n        }\r\n      },\r\n      {\r\n        \"id\": \"l98dyx3yjb\",\r\n        \"type\": \"header\",\r\n        \"data\": {\r\n          \"text\": \"Key features\",\r\n          \"level\": 3\r\n        }\r\n      },\r\n      {\r\n        \"id\": \"os_YI4eub4\",\r\n        \"type\": \"list\",\r\n        \"data\": {\r\n          \"type\": \"unordered\",\r\n          \"items\": [\r\n            \"It is a block-style editor\",\r\n            \"It returns clean data output in JSON\",\r\n            \"Designed to be extendable and pluggable with a <a href=\\\"https://editorjs.io/creating-a-block-tool\\\">simple API</a>\"\r\n          ]\r\n        }\r\n      },\r\n      {\r\n        \"id\": \"1yKeXKxN7-\",\r\n        \"type\": \"header\",\r\n        \"data\": {\r\n          \"text\": \"What does it mean «block-styled editor»\",\r\n          \"level\": 3\r\n        }\r\n      }\r\n    ]\r\n  },\r\n  \"technology\": \"Next JS, Node JS\"\r\n}`\n- **Description:**\n  - Creates a new project with title, description, and technology details.\n"
+      description: >-
+        ### **Endpoint: \[Project Entry\] Create Project**
+
+
+        **Method:** POST  
+
+        **Path:** `api/v1/project/create`  
+
+        **Authentication:** Required
+
+
+        ### **Description:**
+
+
+        This endpoint creates a new project with a title, description, and
+        technology details.
+
+
+        ### **Important Notes:**
+
+
+        - This endpoint **accepts JSON raw data** in the request body.
+            
+        - **Do not include image files** in this request.
+            
+        - If you need to upload an image (such as a project thumbnail), first
+        create the project using this endpoint, then use the **file** [upload
+        endpoint](https://go.postman.co/workspace/e673e172-c878-4d61-9366-0a961dd8cade/documentation/26853080-5a6330d2-088a-4e18-bf50-52335f6ab02b?entity=request-012762ce-0d3b-4032-b086-3dd6ba4ae1fc)
+        (`api/v1/file/upload`) to upload images separately.
+            
+        - If no project thumbnail is uploaded, the system will **automatically
+        set a default thumbnail** from [placehold.co](https://placehold.co). It
+        is still best to upload the thumbnail
+            
+
+        ### **Request Body:**
+
+
+        ```
+
+        {
+          "title": "[TITLE HERE]",
+          "description": "[JSON Generated by EditorJS]",
+          "technology": "[TEXT DATA SEPARATED BY COMMA]"
+        }
+
+         ```
       requestBody:
         content:
           application/json:
@@ -1014,7 +1575,56 @@ paths:
       tags:
         - Project Entry > Private (Need Token)
       summary: '[Project Entry] Update'
-      description: "### Endpoint: [Project Entry] Update\n- **Method:** PUT\n- **Path:** `api/v1/project/update/:id`\n- **Authentication:** Required\n- **Request Body:**\n  - `{\r\n    \"title\" : \"revisi lagi\",\r\n    \"description\": {\r\n        \"time\": 1740727077181,\r\n        \"blocks\": [\r\n            {\r\n                \"type\": \"paragraph\",\r\n                \"data\": {\r\n                    \"text\": \"Hey. Meet the new Editor. On this picture you can see it in action. Then, try a demo 🤓\"\r\n                }\r\n            }\r\n        ]\r\n    }\r\n}`\n- **Description:**\n  - Updates an existing project entry.\n"
+      description: >-
+        ### **Endpoint: \[Project Entry\] Update**
+
+
+        **Method:** PUT  
+
+        **Path:** `api/v1/project/update/:id`  
+
+        **Authentication:** Required
+
+
+        ### **Description:**
+
+
+        This endpoint updates an existing project entry.
+
+
+        - You can update only the `title`, only the `description`, or only the
+        `technology` field.
+            
+        - You can also update all fields at once in a single request.
+            
+        - Any fields not included in the request will remain unchanged.
+            
+
+        ### **Important Notes:**
+
+
+        - This endpoint **accepts JSON raw data** in the request body.
+            
+        - **Do not include image files** in this request.
+            
+        - If you need to upload an image (such as a project thumbnail), then use
+        the [upload
+        endpoint](https://go.postman.co/workspace/e673e172-c878-4d61-9366-0a961dd8cade/documentation/26853080-5a6330d2-088a-4e18-bf50-52335f6ab02b?entity=request-012762ce-0d3b-4032-b086-3dd6ba4ae1fc)
+        (`api/v1/file/upload`) to update images.
+            
+
+        ### **Request Body:**
+
+
+        ``` json
+
+        {
+          "title": "[TITLE HERE]",
+          "description": "[JSON Generated by EditorJS]",
+          "technology": "[TEXT DATA SEPARATED BY COMMA]"
+        }
+
+         ```
       requestBody:
         content:
           application/json:
@@ -1171,13 +1781,43 @@ paths:
       tags:
         - Project Entry > Private (Need Token)
       summary: '[Project Entry] Delete project'
-      description: |
-        ### Endpoint: [Project Entry] Delete project
-        - **Method:** DELETE
-        - **Path:** `api/v1/project/delete/:id`
-        - **Authentication:** Required
-        - **Description:**
-          - Deletes a project entry based on the provided project ID.
+      description: >-
+        ### **Endpoint: \[Project Entry\] Delete Project**
+
+
+        **Method:** DELETE  
+
+        **Path:** `api/v1/project/delete/:id`  
+
+        **Authentication:** Required
+
+
+        ### **Description:**
+
+
+        This endpoint deletes a project entry based on the provided project ID.
+
+
+        **Behavior:**
+
+
+        - If the project is successfully deleted, the response will confirm the
+        deletion.
+            
+        - If the project **does not exist** or the provided ID is invalid, the
+        server will return a **400 Bad Request** response.
+            
+
+        **Important Notes:**
+
+
+        - Ensure that the project ID is correct before making the request.
+            
+        - This action **cannot be undone**, and all related data (except files
+        stored separately) will be permanently removed.
+            
+        - If the project includes an uploaded image, the image file **will be
+        deleted automatically**
       security:
         - bearerAuth: []
       parameters:
@@ -1560,7 +2200,44 @@ paths:
       tags:
         - Certificate Entry > Private (Need token)
       summary: '[Certificate Entry] Create new'
-      description: "### Endpoint: [Certificate Entry] Create new\n- **Method:** POST\n- **Path:** `api/v1/certificate/create`\n- **Authentication:** Required\n- **Request Body:**\n  - `{\r\n    \"title\": \"Certification\",\r\n    \"description\" : \"I'm grateful that i met Google Backend developer Certification\",\r\n    \"link\" : \"https://credly.com/id\",\r\n    \"year\" : \"2024\"\r\n}`\n- **Description:**\n  - Creates a new certificate record with title, description, and issuance year.\n"
+      description: >-
+        ### **Endpoint: \[Certificate Entry\] Create New**
+
+
+        **Method:** POST  
+
+        **Path:** `api/v1/certificate/create`  
+
+        **Authentication:** Required
+
+
+        ---
+
+
+        ### **Description:**
+
+
+        This endpoint allows users to **create a new certification record**,
+        including details such as the title, description, issuance year, and an
+        optional certificate link.
+
+
+        ---
+
+
+        ### **Request Body:**
+
+
+        ```
+
+        {
+          "title": "Google Backend Dev",
+          "description": "I'm grateful that I met Google Backend Developer Certification.",
+          "link": "https://credly.com/id",
+          "year": "2024"
+        }
+
+         ```
       requestBody:
         content:
           application/json:
@@ -1697,7 +2374,65 @@ paths:
       tags:
         - Certificate Entry > Private (Need token)
       summary: '[Certificate Entry] Update Certificate'
-      description: "### Endpoint: [Certificate Entry] Update Certificate\n- **Method:** PUT\n- **Path:** `api/v1/certificate/update/:id`\n- **Authentication:** Required\n- **Request Body:**\n  - `{\r\n    \"title\": \"New Certificate\",\r\n    \"description\": \"Revisi\"\r\n}`\n- **Description:**\n  - Updates an existing certificate entry.\n"
+      description: >-
+        StartFragment
+
+
+        ### **Endpoint: \[Certificate Entry\] Update Certificate**
+
+
+        **Method:** PUT  
+
+        **Path:** `api/v1/certificate/update/:id`  
+
+        **Authentication:** Required
+
+
+        ---
+
+
+        ### **Description:**
+
+
+        This endpoint updates an existing certificate entry based on the
+        provided certificate ID. Users can update any field individually without
+        needing to send the full certificate data.
+
+
+        ---
+
+
+        ### **Important Notes:**
+
+
+        - This endpoint **accepts JSON raw data** in the request body.
+            
+        - Users **can update one or more fields** (title, description, link, or
+        year) without modifying the entire certificate entry.
+            
+        - The `id` in the path must be a valid certificate ID that exists in the
+        system.
+            
+        - If the certificate does not exist, the system will return an
+        appropriate error response.
+            
+
+        ---
+
+
+        ### **Request Body:**
+
+
+        ```
+
+        {
+          "title": "New Certificate",
+          "description": "Updated certification details",
+          "link": "https://credly.com/id",
+          "year": "2025"
+        }
+
+         ```
       requestBody:
         content:
           application/json:
@@ -1841,13 +2576,45 @@ paths:
       tags:
         - Certificate Entry > Private (Need token)
       summary: '[Certificate Entry] Delete Certificate'
-      description: |
-        ### Endpoint: [Certificate Entry] Delete Certificate
-        - **Method:** DELETE
-        - **Path:** `api/v1/certificate/delete/:id`
-        - **Authentication:** Required
-        - **Description:**
-          - Deletes a certificate record.
+      description: >-
+        ### **Endpoint: \[Certificate Entry\] Delete Certificate**
+
+
+        **Method:** DELETE  
+
+        **Path:** `api/v1/certificate/delete/:id`  
+
+        **Authentication:** Required
+
+
+        ---
+
+
+        ### **Description:**
+
+
+        This endpoint **permanently deletes** a certificate record based on the
+        provided certificate ID. The deletion is irreversible, and the
+        certificate will be removed from the system.
+
+
+        ---
+
+
+        ### **Important Notes:**
+
+
+        - **Authentication is required**—only the certificate owner can delete
+        their own certificate.
+            
+        - The `id` in the path must be a **valid certificate ID** that exists in
+        the system.
+            
+        - If the certificate does not exist, the system will return an
+        appropriate error response.
+            
+        - **Deleting a certificate cannot be undone**. If the user wants to keep
+        a record, they should retrieve and store it before deletion.
       security:
         - bearerAuth: []
       parameters:
@@ -1974,13 +2741,39 @@ paths:
       tags:
         - Certificate Entry > Public
       summary: '[Certificate Entry] Get All'
-      description: |
-        ### Endpoint: [Certificate Entry] Get All
-        - **Method:** GET
-        - **Path:** `api/v1/certificate/all`
-        - **Authentication:** Not Required
-        - **Description:**
-          - Retrieves details of a stored certificate.
+      description: >-
+        ### **Endpoint: \[Certificate Entry\] Get All Certificates**
+
+
+        **Method:** GET  
+
+        **Path:** `api/v1/certificate/all`  
+
+        **Authentication:** Not Required
+
+
+        ---
+
+
+        ### **Description:**
+
+
+        This endpoint **retrieves all certificates** owned by a user. It
+        provides details such as the certificate title, description, issuance
+        year, and related link.
+
+
+        ---
+
+
+        ### **Notes:**
+
+
+        - The response will return **all stored certificates** associated with
+        the user.
+            
+        - If the user has no certificates, the response will return an empty
+        list.
       responses:
         '200':
           description: OK
@@ -2251,7 +3044,69 @@ paths:
       tags:
         - Experience Entry > Private (Need token)
       summary: '[Experience Entry] Create new'
-      description: "### Endpoint: [Experience Entry] Create new\n- **Method:** POST\n- **Path:** `api/v1/experience/create`\n- **Authentication:** Required\n- **Request Body:**\n  - `{\r\n    \"entity\" : \"PT Mabar Yok\",\r\n    \"position\": \"Fulltime Manager\",\r\n    \"type\" : \"job\",\r\n    \"description\": \"- Point 1 \\n - Point 2\",\r\n    \"startDate\" : \"2025-04-07\",\r\n    \"endDate\" : \"2025-06-09\"\r\n}`\n- **Description:**\n  - General API endpoint.\n"
+      description: >-
+        ### **Endpoint: \[Experience Entry\] Create New Experience**
+
+
+        **Method:** POST  
+
+        **Path:** `api/v1/experience/create`  
+
+        **Authentication:** Required
+
+
+        ---
+
+
+        ### **Description:**
+
+
+        This endpoint allows authenticated users to **add a new experience
+        entry** to their profile. The experience can be a job, internship,
+        freelance project, or any professional engagement.
+
+
+        ---
+
+
+        ### **Important Notes:**
+
+
+        - This endpoint **only accepts JSON raw data** in the request body.
+            
+        - Experience entries must include an **entity (company or
+        organization)** and a **position (job title or role).**
+            
+        - The `type` field determines the category of experience, such as
+        `"job"`, `"internship"`, or `"freelance"`.
+            
+        - The `description` field supports **multi-line text** using `\n` for
+        line breaks.
+            
+        - Both `startDate` and `endDate` must be in `YYYY-MM-DD` format.
+            
+        - If the experience is **currently ongoing**, the `endDate` field can be
+        set to `null`.
+            
+
+        ---
+
+
+        ### **Request Body Example:**
+
+
+        ```
+
+        {
+          "entity": "PT Mabar Yok",
+          "position": "Fulltime Manager",
+          "type": "job",
+          "description": "- Point 1 \n - Point 2",
+          "startDate": "2025-04-07",
+          "endDate": "2025-06-09"
+        }
+
+         ```
       requestBody:
         content:
           application/json:
@@ -2398,7 +3253,68 @@ paths:
       tags:
         - Experience Entry > Private (Need token)
       summary: '[Experience Entry] Update Experience'
-      description: "### Endpoint: [Experience Entry] Update Experience\n- **Method:** PUT\n- **Path:** `api/v1/experience/update/:id`\n- **Authentication:** Required\n- **Request Body:**\n  - `{\r\n    \"entity\": \"PT ini hasil revisi\",\r\n    \"description\": \"Revisi\"\r\n}`\n- **Description:**\n  - General API endpoint.\n"
+      description: >-
+        ### **Endpoint: \[Experience Entry\] Update Experience**
+
+
+        **Method:** PUT  
+
+        **Path:** `api/v1/experience/update/:id`  
+
+        **Authentication:** Required
+
+
+        ---
+
+
+        ### **Description:**
+
+
+        This endpoint allows authenticated users to **update an existing
+        experience entry** by modifying one or more fields. Users can update
+        details such as the entity (company/organization), position, job type,
+        description, and dates.
+
+
+        ---
+
+
+        ### **Important Notes:**
+
+
+        - The `id` parameter in the URL refers to the **experience entry ID**
+        that needs to be updated.
+            
+        - **Partial updates are allowed** – users can update **only specific
+        fields** without sending the entire object.
+            
+        - The system will **only modify the provided fields** while keeping the
+        others unchanged.
+            
+        - If the provided `id` does not exist, an error will be returned.
+            
+        - This endpoint **does not allow updating** the experience entry's
+        unique ID.
+            
+
+        ---
+
+
+        ### **Request Body Example (Partial Update):**
+
+
+        ```
+
+        {
+          "entity": "PT ini hasil revisi",
+          "description": "Revisi"
+        }
+
+         ```
+
+        🔹 In this example, **only the** **`entity`** **(company name) and**
+        **`description`** **fields** will be updated. Other fields remain
+        unchanged.
       requestBody:
         content:
           application/json:
@@ -2544,13 +3460,43 @@ paths:
       tags:
         - Experience Entry > Private (Need token)
       summary: '[Experience Entry] Delete Experience'
-      description: |
-        ### Endpoint: [Experience Entry] Delete Experience
-        - **Method:** DELETE
-        - **Path:** `api/v1/experience/delete/:id`
-        - **Authentication:** Required
-        - **Description:**
-          - General API endpoint.
+      description: >-
+        ### **Endpoint: \[Experience Entry\] Delete Experience**
+
+
+        **Method:** DELETE  
+
+        **Path:** `api/v1/experience/delete/:id`  
+
+        **Authentication:** Required
+
+
+        ---
+
+
+        ### **Description:**
+
+
+        This endpoint allows an authenticated user to **permanently delete** an
+        experience entry based on its unique ID. Once deleted, the experience
+        entry **cannot be recovered**.
+
+
+        ---
+
+
+        ### **Important Notes:**
+
+
+        - The `id` parameter in the URL must be the **valid ID** of an existing
+        experience entry.
+            
+        - **Only the owner of the experience entry** can delete it.
+            
+        - If the specified `id` does not exist, an error will be returned.
+            
+        - This action **cannot be undone**, so ensure that the experience entry
+        is no longer needed before deleting.
       security:
         - bearerAuth: []
       parameters:
@@ -2677,13 +3623,41 @@ paths:
       tags:
         - Experience Entry > Public
       summary: '[Experience Entry] Get All'
-      description: |
-        ### Endpoint: [Experience Entry] Get All
-        - **Method:** GET
-        - **Path:** `api/v1/experience/all`
-        - **Authentication:** Not Required
-        - **Description:**
-          - General API endpoint.
+      description: >-
+        StartFragment
+
+
+        ### **Endpoint: \[Experience Entry\] Get All**
+
+
+        **Method:** GET  
+
+        **Path:** `api/v1/experience/all`  
+
+        **Authentication:** Not Required
+
+
+        ---
+
+
+        ### **Description:**
+
+
+        This endpoint retrieves all experience entries stored in the database,
+        available to provide information to any website visitor about user's
+        experience
+
+
+        ---
+
+
+        ### **Important Notes:**
+
+
+        - It returns **all stored experiences** from the system.
+            
+        - If there are no experience records, the response will return an
+        **empty array (****`[]`****)** instead of an error.
       responses:
         '200':
           description: OK
@@ -2814,13 +3788,37 @@ paths:
       tags:
         - Experience Entry > Public
       summary: '[Experience Entry] Get By Id'
-      description: |
-        ### Endpoint: [Experience Entry] Get By Id
-        - **Method:** GET
-        - **Path:** `api/v1/experience/:id`
-        - **Authentication:** Not Required
-        - **Description:**
-          - General API endpoint.
+      description: >-
+        ### **Endpoint: \[Experience Entry\] Get By Id**
+
+
+        **Method:** GET  
+
+        **Path:** `api/v1/experience/all`  
+
+        **Authentication:** Not Required
+
+
+        ---
+
+
+        ### **Description:**
+
+
+        This endpoint retrieves specific experience entries stored in the
+        database by id
+
+
+        ---
+
+
+        ### **Important Notes:**
+
+
+        - It returns **all stored experiences** from the system.
+            
+        - If there are no experience records, the response will return an error
+        response.
       parameters:
         - name: id
           in: path
@@ -2958,16 +3956,121 @@ paths:
       tags:
         - File or Image Endpoint
       summary: '[File] Upload'
-      description: |
-        ### Endpoint: [File] Upload
-        - **Method:** POST
-        - **Path:** `api/v1/file/upload`
-        - **Authentication:** Not Required
-        - **Request Body:**
-          - `cv_file` (file): No description
-          - `profile_image` (file): No description
-        - **Description:**
-          - General API endpoint.
+      description: >-
+        **Endpoint: Uploading File**  
+
+        **Method:** POST  
+
+        **Path:** `api/v1/file/upload`  
+
+        **Authentication:** Required
+
+
+        ### **Description:**
+
+
+        This endpoint allows the frontend or client to upload files/images when
+        updating existing data or creating new data that includes file/image
+        attachments.
+
+
+        You must provide the appropriate `id` corresponding to the field name.
+
+
+        ### **Note:**
+
+
+        The **file field name** MUST be one of the following:
+
+
+        - `cv_file`
+            
+        - `profile_image`
+            
+        - `project_thumbnail_image`
+            
+
+        Any other file field name will result in a **400 Bad Request** error.
+
+
+        - `cv_file` is used to update/add a user’s CV. It requires the **user
+        profile ID**.
+            
+        - `profile_image` is used to update a user’s profile picture. It
+        requires the **user profile ID**.
+            
+        - `project_thumbnail_image` is used to update the thumbnail image of a
+        project. It requires the **project ID**.
+            
+
+        You must send the correct ID corresponding to the field name.
+
+
+        Field names that share the same ID can be sent together.
+
+
+        For example, `cv_file` and `profile_image` can be sent together since
+        both belong to the user profile.
+
+
+        ---
+
+
+        ## **How To Use:**
+
+
+        ✅ **Case: Creating a New Project (Including an Image in Project Data)**
+
+
+        1. The user fills in all project details and clicks **Submit**.
+            
+        2. The frontend sends the project data to the backend to create a new
+        project ([create project
+        endpoint](https://go.postman.co/workspace/e673e172-c878-4d61-9366-0a961dd8cade/documentation/26853080-5a6330d2-088a-4e18-bf50-52335f6ab02b?entity=request-ce3839dc-44ce-4a01-9cdb-b30b7bfd9d25)).
+        The payload **must not** contain any files/images.
+            
+        3. The backend responds with the newly created project **ID**.
+            
+        4. The frontend sends the image file to the backend along with the
+        project **ID** (using this file upload endpoint).
+            
+        5. The backend processes the request and responds accordingly.
+            
+
+        ✅ **Case: Updating a Project Image**
+
+
+        1. The user changes the project image and clicks **Submit**.
+            
+        2. The frontend sends the new image file along with the corresponding
+        project **ID** to this file upload endpoint.
+            
+        3. The backend processes the request and responds accordingly.
+            
+
+        ✅ **Case: Updating Profile Image**
+
+
+        1. The user changes their profile picture and clicks **Submit**.
+            
+        2. The frontend sends the new image file along with the **user profile
+        ID** to this file upload endpoint.
+            
+        3. The backend processes the request and responds accordingly.
+            
+
+        🚫 **Case: Updating Project Thumbnail & Profile Image Together**
+
+
+        1. The frontend sends both the project thumbnail image and the profile
+        image using the **user profile ID** to this endpoint.
+            
+        2. The backend will save the **profile image** (since it matches the
+        user profile ID) but **will not save the project thumbnail image**
+        (because the ID is incorrect).
+            
+        3. The response will be **400 Bad Request**, and the project thumbnail
+        update will fail.
       requestBody:
         content:
           multipart/form-data:
@@ -2976,15 +4079,154 @@ paths:
               properties:
                 cv_file:
                   type: string
+                  description: cv_file are part of user profile table
                   format: binary
                 profile_image:
                   type: string
+                  description: profile_image are part of user profile table
                   format: binary
+                project_thumbnail_image:
+                  type: string
+                  description: project_thumbnail_image are part of project table
+                  format: binary
+                id:
+                  type: string
+                  example: 67e2d7b3afcf2a5f6b26d6c4
       security:
         - bearerAuth: []
       responses:
         '200':
           description: OK
+          headers:
+            Content-Security-Policy:
+              schema:
+                type: string
+                example: >-
+                  default-src 'self';base-uri 'self';font-src 'self' https:
+                  data:;form-action 'self';frame-ancestors 'self';img-src 'self'
+                  data:;object-src 'none';script-src 'self';script-src-attr
+                  'none';style-src 'self' https:
+                  'unsafe-inline';upgrade-insecure-requests
+            Cross-Origin-Opener-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Cross-Origin-Resource-Policy:
+              schema:
+                type: string
+                example: same-origin
+            Origin-Agent-Cluster:
+              schema:
+                type: string
+                example: '?1'
+            Referrer-Policy:
+              schema:
+                type: string
+                example: no-referrer
+            Strict-Transport-Security:
+              schema:
+                type: string
+                example: max-age=31536000; includeSubDomains
+            X-Content-Type-Options:
+              schema:
+                type: string
+                example: nosniff
+            X-DNS-Prefetch-Control:
+              schema:
+                type: string
+                example: 'off'
+            X-Download-Options:
+              schema:
+                type: string
+                example: noopen
+            X-Frame-Options:
+              schema:
+                type: string
+                example: SAMEORIGIN
+            X-Permitted-Cross-Domain-Policies:
+              schema:
+                type: string
+                example: none
+            X-XSS-Protection:
+              schema:
+                type: integer
+                example: '0'
+            Vary:
+              schema:
+                type: string
+                example: Origin, Accept-Encoding
+            Access-Control-Allow-Credentials:
+              schema:
+                type: boolean
+                example: 'true'
+            RateLimit-Policy:
+              schema:
+                type: string
+                example: 300;w=900
+            RateLimit-Limit:
+              schema:
+                type: integer
+                example: '300'
+            RateLimit-Remaining:
+              schema:
+                type: integer
+                example: '298'
+            RateLimit-Reset:
+              schema:
+                type: integer
+                example: '855'
+            Content-Type:
+              schema:
+                type: string
+                example: application/json; charset=utf-8
+            Content-Length:
+              schema:
+                type: integer
+                example: '153'
+            ETag:
+              schema:
+                type: string
+                example: W/"99-tlN41Aa2z0M0d6TJQV1Rlj0FUY4"
+            Date:
+              schema:
+                type: string
+                example: Tue, 25 Mar 2025 17:57:58 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-0:
+                  summary: '[200 OK] Upload One'
+                  value:
+                    success: true
+                    message: File Successfully Uploaded
+                    data:
+                      - cv_file:
+                          url: >-
+                            174292547882617344115-3a4c-41e8-b014-05c36dd41512.pdf
+                          download: 0
+                example-1:
+                  summary: '[200 OK] Multiple Upload with the same ID'
+                  value:
+                    success: true
+                    message: File Successfully Uploaded
+                    data:
+                      - cv_file:
+                          url: >-
+                            174292550134947734fdd-1c29-47f0-9211-9b5d88376e40.pdf
+                          download: 0
+                      - profile_image: 1742925501351d56e25c8-5788-4cd8-b840-f92ff384db8d.jpeg
+        '400':
+          description: Bad Request
           headers:
             Content-Security-Policy:
               schema:
@@ -3070,15 +4312,15 @@ paths:
             Content-Length:
               schema:
                 type: integer
-                example: '159'
+                example: '58'
             ETag:
               schema:
                 type: string
-                example: W/"9f-L2VdwtfJvIODQUTVs9qODl0j1Jc"
+                example: W/"3a-NBSgjbTx0jQQGvbXgyaAB1rfQ+E"
             Date:
               schema:
                 type: string
-                example: Tue, 18 Mar 2025 11:24:32 GMT
+                example: Tue, 25 Mar 2025 17:57:13 GMT
             Connection:
               schema:
                 type: string
@@ -3092,11 +4334,8 @@ paths:
               schema:
                 type: object
               example:
-                success: true
-                message: File Uploaded
-                fileOrImagePath:
-                  cv_file: >-
-                    /assets/upload_by_user/cv_file/1742297072242e93fec5c-b519-4eb9-a782-4bd5e66b01e2.pdf
+                success: false
+                message: Project not found or deleted
   /api/v1/visitor:
     post:
       tags:
