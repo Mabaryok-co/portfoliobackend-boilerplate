@@ -9,7 +9,7 @@ dotenv.config({ path: path.join(__dirname, "../.env") });
 const ENV_SCHEMA = Joi.object({
   APP_NAME: Joi.string().required(),
   NODE_ENV: Joi.string().valid("development", "production").required(),
-  PORT: Joi.number().default(3000),
+  APP_PORT: Joi.number().default(3000),
   APP_URL: Joi.string().required(),
   APP_ENC_KEY: Joi.string().required(),
 
@@ -46,7 +46,7 @@ if (error) throw new Error(`Config Validation error: ${error.message}`);
 
 const config = {
   env: env.NODE_ENV,
-  port: env.PORT,
+  port: env.APP_PORT,
   appName: env.APP_NAME,
   appUrl: env.APP_URL,
   appSecret: env.APP_ENC_KEY,

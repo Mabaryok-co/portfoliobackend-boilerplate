@@ -1,4 +1,4 @@
-const { RouteError } = require("@handler/errorHandlers");
+const AppError = require("@AppError");
 
 exports.noSpace = (val, helpers = null) => {
   if (/\s/.test(val)) {
@@ -7,7 +7,7 @@ exports.noSpace = (val, helpers = null) => {
         message: "Value must not have space",
       });
     }
-    throw RouteError("Value must not have space");
+    throw new AppError("Value must not have space");
   }
   return val;
 };

@@ -16,11 +16,11 @@ The main goal of this project is to provide an API, and easily implement this to
 
 - ✅ AI Writing Enhancement
 
-- ⚒️ Work / Project Showcase (CRUD)
+- ✅ Work / Project Showcase (CRUD)
 
-- Certificate (CRUD)
+- ✅ Certificate (CRUD)
 
-- Job/Organizational/Volunteer Experience (CRUD)
+- ✅ Job/Organizational/Volunteer Experience (CRUD)
 
 - Track visitor, and total cv download
 

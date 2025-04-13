@@ -52,7 +52,7 @@ exports.createUser = async function () {
 
     const userCount = await UserModel.countDocuments();
     if (userCount > 0) {
-      logger.log("✅ User Telah Ada. Melanjutkan Server");
+      logger.info("✅ User Telah Ada. Melanjutkan Server");
       fs.writeFileSync(CACHE_FILE, "done");
       return;
     }
@@ -66,7 +66,7 @@ exports.createUser = async function () {
 
     userData.password = hashedPassword;
 
-    await UserModel.create(userDatal);
+    await UserModel.create(userData);
 
     logger.info(
       "✅ User berhasil dibuat! Silahkan login menggunakan akun ini. Mohon lengkapi data diri anda di profile setelah login"

@@ -16,14 +16,13 @@ const UserSchema = new mongoose.Schema(
         },
       },
     ],
-    contact: { type: String, default: "Lorem Ipsum", required: true },
-    image: {
+    profile_image: {
       type: String,
       default: "https://placehold.co/400",
       required: true,
     },
-    cv: {
-      url: { type: String },
+    cv_file: {
+      url: { type: String, default: null },
       download: { type: Number, default: 0 },
     },
   },

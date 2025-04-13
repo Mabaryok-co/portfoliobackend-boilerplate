@@ -2,27 +2,27 @@ const express = require("express");
 const router = express.Router();
 const { verifyToken } = require("@middleware/token");
 const handler = require("@handler/projectEntry_handler");
-const { errorHandlers } = require("@handler/errorHandlers");
+const tryCatch = require("@tryCatch");
 const { bodyNotEmpty } = require("@validator/body");
 
 const privateRoute = express.Router();
 const publicRoute = express.Router();
 
 router.use("", publicRoute);
-publicRoute.get("/all", errorHandlers(handler.getAllProjectEntry));
-publicRoute.get("/:id", errorHandlers(handler.getByIDProjectEntry));
+publicRoute.get("/all", tryCatch(handler.getAllProjectEntry));
+publicRoute.get("/:id", tryCatch(handler.getByIDProjectEntry));
 
 router.use("", verifyToken, privateRoute);
 privateRoute.post(
   "/create",
   bodyNotEmpty,
-  errorHandlers(handler.createProjectEntry)
+  tryCatch(handler.createProjectEntry)
 );
 privateRoute.put(
   "/update/:id",
   bodyNotEmpty,
-  errorHandlers(handler.updateProjectEntry)
+  tryCatch(handler.updateProjectEntry)
 );
-privateRoute.delete("/delete/:id", errorHandlers(handler.deleteProjectEntry));
+privateRoute.delete("/delete/:id", tryCatch(handler.deleteProjectEntry));
 
 module.exports = router;

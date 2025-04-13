@@ -8,3 +8,4 @@ public/assets/default_by_app/*
 !public/assets/default_by_app/.gitkeep
 public/assets/upload_by_user/*
 !public/assets/upload_by_user/.gitkeep
+redis-data
