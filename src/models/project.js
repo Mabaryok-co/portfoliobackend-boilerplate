@@ -1,4 +1,3 @@
-const { required } = require("joi");
 const mongoose = require("mongoose");
 
 const ProjectSchema = new mongoose.Schema(
@@ -11,6 +10,8 @@ const ProjectSchema = new mongoose.Schema(
       required: true,
       default: "https://placehold.co/1920x1080",
     },
+    year: { type: String, required: true }, // String harus sudah sesuai format "YYYY-MM"
+    link: { type: String, default: null },
   },
   { timestamps: true }
 );

@@ -13,6 +13,8 @@ const cookieparser = require("cookie-parser");
 const path = require("path");
 const swaggerUiDist = require("swagger-ui-dist");
 
+app.set("trust proxy", true);
+
 app.use(timeout("15s", { respond: true }));
 app.use(bparser.urlencoded({ extended: true }));
 app.use(bparser.json());
