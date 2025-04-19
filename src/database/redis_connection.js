@@ -1,7 +1,6 @@
 const logger = require("@logger/logger");
 const config = require("@config");
 const Redis = require("ioredis");
-const { connect } = require("mongoose");
 
 let delay = config.redis.retryMultiplier;
 
@@ -10,7 +9,7 @@ const redisClient = new Redis({
   port: config.redis.port,
   password: config.redis.password,
   retryStrategy: (times) => {
-    delay = Math.min(times * config.redis.retryMultiplier, 10000);
+    delay = Math.min(times * config.redis.retryMultiplier, 5000);
     logger.warn(`🔄 Redis Retry in ${delay / 1000} seconds...`);
     return delay;
   },

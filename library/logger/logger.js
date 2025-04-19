@@ -5,7 +5,7 @@ const config = require("@config");
 
 const baseLogDir = path.join(__dirname, "../../logs");
 
-//New folder everyday
+// New folder everyday
 const getLogDir = () => {
   const date = new Date().toISOString().split("T")[0];
   return path.join(baseLogDir, date);
@@ -22,7 +22,7 @@ const datePattern = (Freq) => {
   }
 };
 
-//Log level default by Winston. Low to High priority
+// //Log level default by Winston. Low to High priority
 const defaultLevel = [
   "silly",
   "debug",
@@ -33,7 +33,7 @@ const defaultLevel = [
   "error",
 ];
 
-//Minimum log level. Default are info. so only priority greater than or equal than info
+// //Minimum log level. Default are info. so only priority greater than or equal than info
 const minLogLevel = config.log.level;
 
 //Slicing index that is lower than minLogLevel index
@@ -42,7 +42,7 @@ const logLevel = defaultLevel.slice(defaultLevel.indexOf(minLogLevel));
 const createDailyTransportFile = (level) => {
   return new dailyRotateFile({
     level: level,
-    filename: `${level == "error" ? "error" : "all"}-%DATE%.log`,
+    filename: `${level == "error" ? level : "all"}-%DATE%.log`,
     dirname: getLogDir(),
     datePattern: datePattern(config.log.freq),
     maxSize: `${config.log.maxSize}m`,
@@ -68,12 +68,7 @@ const logger = winston.createLogger({
       return `${timestamp} - [${level}]: ${message}`;
     })
   ),
-  transports: [
-    new winston.transports.Console({
-      stderrLevels: ["error"],
-    }),
-    ...logTransport,
-  ],
+  transports: [new winston.transports.Console(), ...logTransport],
 });
 
 module.exports = logger;

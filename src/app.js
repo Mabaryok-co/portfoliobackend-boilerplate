@@ -12,8 +12,9 @@ const errorHandler = require("./middleware/errorHandler");
 const cookieparser = require("cookie-parser");
 const path = require("path");
 const swaggerUiDist = require("swagger-ui-dist");
+const morgan = require("morgan");
 
-app.set("trust proxy", true);
+// app.set("trust proxy", true);
 
 app.use(timeout("15s", { respond: true }));
 app.use(bparser.urlencoded({ extended: true }));
@@ -22,29 +23,41 @@ app.use(cookieparser());
 app.use(compression());
 app.use(helmet());
 
-//CORS CONFIGURATION
-const mainOrigin = `${config.appUrl}:${config.port}`;
-const allowedOrigins = [
-  mainOrigin,
-  config.cors.extraOrigins,
-  config.cors.frontend,
-];
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (config.env === "development") {
-        return callback(null, true); // Allow all in dev mode
-      }
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      }
+app.get("/", function (_, res) {
+  res.status(200).send("You found me!");
+});
 
-      callback(Object.assign(new Error("CORS_NOT_ALLOWED"), { status: 403 }));
+app.use(
+  morgan("combined", {
+    stream: {
+      write: (message) => logger.http(message.trim()),
     },
-    credentials: true,
   })
 );
-app.options("*", cors());
+
+//CORS CONFIGURATION
+const allowedOrigins = [
+  config.cors.extraOrigins,
+  config.cors.frontend,
+  config.appUrl,
+  `${config.appUrl}:${config.port}`,
+];
+
+const corsOptions = {
+  origin: allowedOrigins,
+  credentials: true,
+};
+
+// app.use((req, _, next) => {
+//   console.log("\n[REQ] Method:", req.method);
+//   console.log("[REQ] URL:", req.url);
+//   console.log("[REQ] Origin:", req.headers.origin);
+//   console.log("[REQ] User-Agent:", req.headers["user-agent"]);
+//   next();
+// });
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 // Apply global rate limiter to all requests
 app.use(limiters.global);
@@ -67,13 +80,28 @@ app.use(
   "public/assets",
   express.static(path.join(__dirname, "../public/assets/default_by_app"))
 );
-const allowedFolders = ["cv_file", "profile_image", "project_image"];
+
 // Only serve folder that allowed. This folder includes file uploaded by user
+const allowedFolders = ["cv_file", "profile_image", "thumbnail_image"];
 allowedFolders.forEach((folder) => {
   app.use(
-    `/public/document/${folder}`,
+    `/document/${folder}`,
     express.static(
-      path.join(__dirname, "../public/assets/upload_by_user", folder)
+      path.join(__dirname, "../public/assets/upload_by_user", folder),
+      {
+        setHeaders: (res, _) => {
+          //Allow from anywhere if development
+          if (config.env == "development") {
+            res.set("Access-Control-Allow-Origin", "*");
+          } else {
+            const origin = res.req.headers.origin;
+            if (allowedOrigins.includes(origin)) {
+              res.set("Access-Control-Allow-Origin", origin);
+            }
+          }
+          res.set("Cross-Origin-Resource-Policy", "cross-origin");
+        },
+      }
     )
   );
 });
