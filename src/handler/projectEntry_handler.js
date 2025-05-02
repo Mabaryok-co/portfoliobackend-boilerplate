@@ -3,7 +3,6 @@ const ProjectSchemaJOI = require("@validator/schema/projectSchema");
 const ProjectSchema = require("@models/project");
 const AppError = require("@AppError");
 const mongoose = require("mongoose");
-const { Route } = require("express");
 
 exports.createProjectEntry = async function (req, res) {
   const data = JoiValidator(ProjectSchemaJOI, req.body);

@@ -9,6 +9,9 @@ services:
     env_file: .env
     ports:
       - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - ./public/assets:/app/public/assets
+      - ./logs:/app/logs
     depends_on:
       - redis
     networks:

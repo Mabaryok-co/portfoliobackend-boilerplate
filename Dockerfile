@@ -1,5 +1,5 @@
 # Gunakan Node.js versi terbaru sebagai base image
-FROM node:18
+FROM node:22-slim
 
 # Set direktori kerja di dalam container
 WORKDIR /app

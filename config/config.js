@@ -33,6 +33,7 @@ const ENV_SCHEMA = Joi.object({
 
   LOG_DIR: Joi.string().optional().allow(""),
   LOG_LEVEL: Joi.string()
+    .lowercase()
     .valid("debug", "info", "verbose", "http", "warn", "error")
     .required(),
   LOG_MAX_SIZE_IN_MB: Joi.number().required(),
