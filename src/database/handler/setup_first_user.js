@@ -8,36 +8,25 @@ const { noSpace } = require("@validator/space");
 const JoiValidator = require("@validator/JoiValidator");
 const userSchema = require("@validator/schema/userSchema");
 
+require("dotenv").config();
+
 const CACHE_FILE = path.join(__dirname, "/setup_first_user_done.tmp"); // File untuk menyimpan status setup
 
-async function input(query) {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  return new Promise((resolve) => {
-    rl.question(query, (answer) => {
-      rl.close();
-      resolve(answer);
-    });
-  });
-}
-
-async function getUserCredential() {
+function getUserCredential() {
   while (true) {
-    try {
-      const username = noSpace(await input("Masukkan username: "));
-      const password = noSpace(await input("Masukkan password: "));
-      const data = {
-        username: username,
-        password: password,
-      };
+    const username = process.env.INITIAL_USERNAME;
+    const password = process.env.INITIAL_PASSWORD;
 
-      JoiValidator(userSchema, data, { pick: ["username", "password"] });
-      return data;
-    } catch (error) {
-      logger.warn(`Failed To Create User: ${error.message}`);
+    if (!username || !password) {
+      throw new Error(
+        "INITIAL_USERNAME and INITIAL_PASSWORD are required on first setup."
+      );
     }
+
+    return {
+      username: username,
+      password: password,
+    };
   }
 }
 
@@ -52,26 +41,23 @@ exports.createUser = async function () {
 
     const userCount = await UserModel.countDocuments();
     if (userCount > 0) {
-      logger.info("✅ User Telah Ada. Melanjutkan Server");
+      const userData = getUserCredential();
+      const hashedPassword = await bcrypt.hash(userData.password, 10);
+
+      userData.password = hashedPassword;
+      await UserModel.create(userData);
+
+      logger.info(`✅ [INIT] Default user created`);
+
+      logger.warn(
+        "⚠️ Segera ubah data diri anda pada endpoint profile setelah login"
+      );
+
       fs.writeFileSync(CACHE_FILE, "done");
       return;
     }
-    logger.warn(
-      "\n⚠️  Tidak ada user di database. Silakan buat user terlebih dahulu."
-    );
 
-    const userData = await getUserCredential();
-
-    const hashedPassword = await bcrypt.hash(userData.password, 10);
-
-    userData.password = hashedPassword;
-
-    await UserModel.create(userData);
-
-    logger.info(
-      "✅ User berhasil dibuat! Silahkan login menggunakan akun ini. Mohon lengkapi data diri anda di profile setelah login"
-    );
-    logger.warn("⚠️ Mohon lengkapi data diri anda di profile setelah login");
+    logger.info("✅ User Telah Ada. Melanjutkan Server");
     fs.writeFileSync(CACHE_FILE, "done");
     return;
   } catch (error) {

@@ -14,7 +14,7 @@ const path = require("path");
 const swaggerUiDist = require("swagger-ui-dist");
 const morgan = require("morgan");
 
-// app.set("trust proxy", true);
+app.set("trust proxy", true);
 
 app.use(timeout("15s", { respond: true }));
 app.use(bparser.urlencoded({ extended: true }));
