@@ -1,34 +1,80 @@
+# Personal Portfolio Website Backend
 
-# 🚀Personal Portfolio Website Backend
+This is the backend service for a personal portfolio site—built using **Node.js**, **Express**, **MongoDB**, and **Redis**. It was developed collaboratively by the **Mabaryok Discord community**.
 
-This project is a collaborative effort among team members in the Mabaryok Discord community. This repository is just the backend, frontend are in diffrent repository. *Currently still in the development stage*. It utilizes Express.js as the backend framework, MongoDB as the primary database, and Redis for caching to enhance performance.
+> Frontend code is available in a separate repository. 
 
-The main goal of this project is to provide an API, and easily implement this to your own portfolio website. The project structure includes various directories such as config, controllers, models, routes, and middlewares, each playing a crucial role in data management and business logic.
+The backend is responsible for handling API logic, storing and retrieving data, and managing authentication. It’s structured into logical modules: `config`, `controllers`, `routes`, `models`, and `middlewares`.
+
+---
+
+## 📦 How to Install & Run
+
+You have **two options** to run this project:
 
 
-## 📌Roadmap
+### 🟢 Option 1: Run Directly (Node.js)
 
-- ✅ Authentication and Authorization
+```bash
+# Clone the repository
+git clone https://github.com/Mabaryok-co/portfoliobackend-boilerplate.git
+cd portfoliobackend-boilerplate
 
-- ✅ Redis implementation
+# Install dependencies
+npm install
+```
+> ⚠️ You must fill out all the required fields in .env file. Redis and MongoDB connection strings are mandatory. Edit the .env.example file then rename it to .env
 
-- ✅ Profile Management (RU)
+###### Start the App
+```bash
+# Run with Node
+npm run start
 
-- ✅ AI Writing Enhancement
+# Or run with nodemon (for development)
+npm run dev
+```
 
-- ✅ Work / Project Showcase (CRUD)
+### 🐳 Option 2: Run with Docker (Recommended for deployment)
+```bash
+# Clone the repository
+git clone https://github.com/Mabaryok-co/portfoliobackend-boilerplate.git
+cd portfoliobackend-boilerplate
+```
+>⚠️ Edit the .env.example file then rename it to .env, ensure all required fields are filled, especially the MongoDB and Redis credentials.
 
-- ✅ Certificate (CRUD)
+##### Then Simply run:
+```bash
+docker compose up -d --build
+```
 
-- ✅ Job/Organizational/Volunteer Experience (CRUD)
+This will spin up:
+- A containerized version of the app
+- A Redis container
 
-- Track visitor, and total cv download
+>Note: MongoDB is not included in the Docker setup. It is recommended to use MongoDB Atlas (cloud database). See references section for how to get a connection string.
 
-- Dual Database. (Select DB Postgresql/Mongodb)
+##### After that, it is recommended to see the logs:
+```bash
+docker container logs portfolio-backend-app -f
+```
 
-- Low latency as low as possible
+---
+## 🔗 References & Setup Guides
+✅ Redis Installation Guide
+- [Install Redis on macOS](https://redis.io/docs/latest/operate/oss_and_stack/install/archive/install-redis/install-redis-on-mac-os/)
+- [Install Redis on Linux (Ubuntu)](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis-on-linux/)
+- [Install Redis on Windows (via WSL)](https://redis.io/docs/latest/operate/oss_and_stack/install/archive/install-redis/install-redis-on-windows/)
 
-## Tech Stack
+✅ MongoDB Cloud (Atlas) Guide
+- [Create Free MongoDB Cluster](https://www.mongodb.com/docs/atlas/tutorial/deploy-free-tier-cluster/)
+- [Get MongoDB Connection String](https://www.mongodb.com/resources/products/fundamentals/mongodb-connection-string)
 
-**Server:** Node, Express, MongoDB / Postgresql (soon), Redis
+**You’ll need to whitelist your IP and create a database user to get access.**
 
+---
+
+## 🧱 Tech Stack
+
+- **Node.js** + **Express.js** – Backend server
+- **MongoDB** – Main database (PostgreSQL support planned)
+- **Redis** – Caching and session management
