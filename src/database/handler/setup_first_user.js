@@ -40,7 +40,7 @@ exports.createUser = async function () {
     }
 
     const userCount = await UserModel.countDocuments();
-    if (userCount > 0) {
+    if (userCount == 0) {
       const userData = getUserCredential();
       const hashedPassword = await bcrypt.hash(userData.password, 10);
 
