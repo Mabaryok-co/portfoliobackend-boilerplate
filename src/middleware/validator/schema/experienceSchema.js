@@ -9,8 +9,8 @@ const ExperienceSchemaJOI = joi.object({
   startDate: joi.date().required().max("now").messages({
     "date.max": `your "startDate" input are in the future you know. Are you time traveler?`,
   }),
-  endDate: joi.date().required().less(joi.ref("startDate")).messages({
-    "date.greater": `"endDate" must be less than "startDate"`,
+  endDate: joi.date().required().min(joi.ref("startDate")).messages({
+    "date.min": `"endDate" must be greater than or equal to "startDate"`,
   }),
 });
 
